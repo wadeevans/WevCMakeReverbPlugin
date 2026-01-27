@@ -18,12 +18,12 @@
 //==============================================================================
 /**
 */
-class TemplateAudioProcessor  : public juce::AudioProcessor
+class WevCMakeReverbPluginAudioProcessor  : public juce::AudioProcessor
 {
 public:
     //==============================================================================
-    TemplateAudioProcessor();
-    ~TemplateAudioProcessor() override;
+    WevCMakeReverbPluginAudioProcessor();
+    ~WevCMakeReverbPluginAudioProcessor() override;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -60,5 +60,5 @@ public:
 
 private:
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TemplateAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WevCMakeReverbPluginAudioProcessor)
 };

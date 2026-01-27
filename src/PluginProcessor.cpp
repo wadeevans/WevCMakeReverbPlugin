@@ -10,7 +10,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-TemplateAudioProcessor::TemplateAudioProcessor()
+WevCMakeReverbPluginAudioProcessor::WevCMakeReverbPluginAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -24,17 +24,17 @@ TemplateAudioProcessor::TemplateAudioProcessor()
 {
 }
 
-TemplateAudioProcessor::~TemplateAudioProcessor()
+WevCMakeReverbPluginAudioProcessor::~WevCMakeReverbPluginAudioProcessor()
 {
 }
 
 //==============================================================================
-const juce::String TemplateAudioProcessor::getName() const
+const juce::String WevCMakeReverbPluginAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool TemplateAudioProcessor::acceptsMidi() const
+bool WevCMakeReverbPluginAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -43,7 +43,7 @@ bool TemplateAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool TemplateAudioProcessor::producesMidi() const
+bool WevCMakeReverbPluginAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -52,7 +52,7 @@ bool TemplateAudioProcessor::producesMidi() const
    #endif
 }
 
-bool TemplateAudioProcessor::isMidiEffect() const
+bool WevCMakeReverbPluginAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -61,50 +61,50 @@ bool TemplateAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double TemplateAudioProcessor::getTailLengthSeconds() const
+double WevCMakeReverbPluginAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int TemplateAudioProcessor::getNumPrograms()
+int WevCMakeReverbPluginAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int TemplateAudioProcessor::getCurrentProgram()
+int WevCMakeReverbPluginAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void TemplateAudioProcessor::setCurrentProgram (int index)
+void WevCMakeReverbPluginAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String TemplateAudioProcessor::getProgramName (int index)
+const juce::String WevCMakeReverbPluginAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void TemplateAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void WevCMakeReverbPluginAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void TemplateAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 }
 
-void TemplateAudioProcessor::releaseResources()
+void WevCMakeReverbPluginAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool TemplateAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool WevCMakeReverbPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -129,7 +129,7 @@ bool TemplateAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts)
 }
 #endif
 
-void TemplateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -159,25 +159,25 @@ void TemplateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 }
 
 //==============================================================================
-bool TemplateAudioProcessor::hasEditor() const
+bool WevCMakeReverbPluginAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* TemplateAudioProcessor::createEditor()
+juce::AudioProcessorEditor* WevCMakeReverbPluginAudioProcessor::createEditor()
 {
-    return new TemplateAudioProcessorEditor (*this);
+    return new WevCMakeReverbPluginAudioProcessorEditor (*this);
 }
 
 //==============================================================================
-void TemplateAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void WevCMakeReverbPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
 }
 
-void TemplateAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void WevCMakeReverbPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -187,5 +187,5 @@ void TemplateAudioProcessor::setStateInformation (const void* data, int sizeInBy
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new TemplateAudioProcessor();
+    return new WevCMakeReverbPluginAudioProcessor();
 }
