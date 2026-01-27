@@ -67,7 +67,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/PluginProcessor.cpp
         src/PluginProcessor.h
         src/PluginEditor.cpp
-        src/PluginEditor.h)
+        src/PluginEditor.h
+        src/FractionalDelay.cpp
+        src/FractionalDelay.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE
