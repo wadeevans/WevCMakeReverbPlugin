@@ -2,7 +2,23 @@
 cmake_minimum_required(VERSION 3.30)
 
 # Set the project name and version
-project(MyTemplatePlugin VERSION 1.0.0 LANGUAGES C CXX)
+project(WevCMakeReverbPlugin VERSION 1.0.0 LANGUAGES C CXX)
+
+# One-time class renaming (only runs if source files still have "Template" in them)
+file(GLOB_RECURSE SOURCE_FILES 
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
+
+foreach(SOURCE_FILE ${SOURCE_FILES})
+    file(READ ${SOURCE_FILE} FILE_CONTENTS)
+    string(FIND "${FILE_CONTENTS}" "TemplateAudioProcessor" FOUND_TEMPLATE)
+    if(NOT ${FOUND_TEMPLATE} EQUAL -1)
+        string(REPLACE "TemplateAudioProcessor" "${PROJECT_NAME}AudioProcessor" FILE_CONTENTS "${FILE_CONTENTS}")
+        string(REPLACE "TemplateAudioProcessorEditor" "${PROJECT_NAME}AudioProcessorEditor" FILE_CONTENTS "${FILE_CONTENTS}")
+        file(WRITE ${SOURCE_FILE} "${FILE_CONTENTS}")
+        message(STATUS "Renamed classes in ${SOURCE_FILE}")
+    endif()
+endforeach()
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -26,7 +42,7 @@ FetchContent_MakeAvailable(JUCE)
 # Create the audio plugin target
 juce_add_plugin(${PROJECT_NAME}
     
-    COMPANY_NAME "Wev Template Company"                 # Specify the name of the plugin's author
+    COMPANY_NAME "Wev Company"                 # Specify the name of the plugin's author
     IS_SYNTH FALSE                              # Is this a synth or an effect?
     NEEDS_MIDI_INPUT FALSE                      # Does the plugin need midi input?
     NEEDS_MIDI_OUTPUT FALSE                     # Does the plugin need midi output?
@@ -34,7 +50,7 @@ juce_add_plugin(${PROJECT_NAME}
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE           # Does the editor need keyboard focus?
     COPY_PLUGIN_AFTER_BUILD TRUE                # Should the plugin be installed to a default location after building?
     PLUGIN_MANUFACTURER_CODE Weva               # A four-character manufacturer id with at least one upper-case character
-    PLUGIN_CODE Zjwp                            # A unique four-character plugin id with exactly one upper-case character                                            # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
+    PLUGIN_CODE Rev1                            # A unique four-character plugin id with exactly one upper-case character                                            # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
     FORMATS VST3 AAX Standalone                     # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     VST3_CATEGORIES Fx 
     AAX_CATEGORY AAX_ePlugInCategory_Effect 
