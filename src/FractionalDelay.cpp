@@ -22,4 +22,6 @@ float FractionalDelay::processSample(float input)
 
 void FractionalDelay::clear()
 {
+    for (auto& sample : m_buffer) sample = 0.0f;
+    m_writeIndex = 0;
 }
