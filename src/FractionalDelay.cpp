@@ -1,10 +1,16 @@
 #include "FractionalDelay.h"
 
-void FractionalDelay::prepare(double sampleRate, int maxDelayInSamples)
+void FractionalDelay::prepare(double sampleRate, float maxDelayInMs)
 {
+    m_sampleRate = sampleRate;
+    m_bufferSize = static_cast<int>((maxDelayInMs / 1000.0f) * m_sampleRate);
+    m_buffer.resize(m_bufferSize);
+    m_writeIndex = 0;
+    clear();
+
 }
 
-void FractionalDelay::setDelay(float delayMs)
+void FractionalDelay::setDelay(float delayInMs)
 {
 }
 

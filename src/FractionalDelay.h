@@ -8,17 +8,18 @@ public:
     FractionalDelay() = default;
     ~FractionalDelay() = default;
 
-    void prepare(double sampleRate, int maxDelayInSamples);
-    void setDelay(float delayMs);
+    void prepare(double sampleRate, float maxDelayInMs);
+    void setDelay(float delayInMs);
     float processSample(float input);
     void clear();
 
 private:
 
     std::vector<float> m_buffer;
+    int m_bufferSize = 0;
     int m_writeIndex = 0;
     float m_delayInSamples = 0.0f;
-    double sampleRate = 44100.0;
+    double m_sampleRate = 44100.0;
 
     float linearInterpolate(float previousSample, float nextSample, float fraction)
     {
