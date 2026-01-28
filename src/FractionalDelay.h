@@ -2,6 +2,11 @@
 
 #include <vector>
 
+/**
+ * A fractional delay line with linear interpolation.
+ * Provides subsample-accurate delays using a circular buffer.
+ * Delay times specified in milliseconds, converted internally to samples.
+ */
 class FractionalDelay
 {
 public:

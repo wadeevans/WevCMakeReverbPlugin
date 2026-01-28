@@ -3,6 +3,7 @@
 void FractionalDelay::prepare(double sampleRate, float maxDelayInMs)
 {
     m_sampleRate = sampleRate;
+    // Convert max delay from milliseconds to samples
     m_bufferSize = static_cast<int>((maxDelayInMs / 1000.0f) * m_sampleRate);
     m_buffer.resize(m_bufferSize);
     m_writeIndex = 0;
