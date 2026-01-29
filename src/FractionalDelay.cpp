@@ -2,10 +2,10 @@
 
 void FractionalDelay::prepare(double sampleRate, float maxDelayInMs)
 {
-    m_sampleRate = sampleRate;
+    m_sampleRate = static_cast<float>(sampleRate);
     // Convert max delay from milliseconds to samples
-    m_bufferSize = static_cast<int>((maxDelayInMs / 1000.0f) * m_sampleRate);
-    m_buffer.resize(m_bufferSize);
+    m_bufferSize = (maxDelayInMs / 1000.0f) * m_sampleRate;
+    m_buffer.resize(static_cast<int>(m_bufferSize));
     m_writeIndex = 0;
     clear();
 
@@ -13,10 +13,10 @@ void FractionalDelay::prepare(double sampleRate, float maxDelayInMs)
 
 void FractionalDelay::setDelay(float delayInMs)
 {
-    m_delayInSamples = (delayInMs / 1000.0f) * static_cast<float>(m_sampleRate);
+    m_delayInSamples = (delayInMs / 1000.0f) * m_sampleRate;
     // Ensure delay doesn't exceed buffer size
-    if (m_delayInSamples > static_cast<float>(m_bufferSize)) 
-        m_delayInSamples = static_cast<float>(m_bufferSize);
+    if (m_delayInSamples > m_bufferSize) 
+        m_delayInSamples = m_bufferSize;
 
 }
 

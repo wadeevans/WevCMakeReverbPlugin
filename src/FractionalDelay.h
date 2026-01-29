@@ -21,10 +21,10 @@ public:
 private:
 
     std::vector<float> m_buffer;
-    int m_bufferSize = 0;
+    float m_bufferSize = 0.0f;
     int m_writeIndex = 0;
     float m_delayInSamples = 0.0f;
-    double m_sampleRate = 44100.0;
+    float m_sampleRate = 44100.0f;
 
     float linearInterpolate(float previousSample, float nextSample, float fraction)
     {
