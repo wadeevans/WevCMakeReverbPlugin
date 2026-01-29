@@ -13,6 +13,11 @@ void FractionalDelay::prepare(double sampleRate, float maxDelayInMs)
 
 void FractionalDelay::setDelay(float delayInMs)
 {
+    m_delayInSamples = (delayInMs / 1000.0f) * static_cast<float>(m_sampleRate);
+    // Ensure delay doesn't exceed buffer size
+    if (m_delayInSamples > static_cast<float>(m_bufferSize)) 
+        m_delayInSamples = static_cast<float>(m_bufferSize);
+
 }
 
 float FractionalDelay::processSample(float input)
