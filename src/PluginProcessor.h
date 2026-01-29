@@ -15,6 +15,9 @@
 #include <juce_audio_devices/juce_audio_devices.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 
+#include "FractionalDelay.h"
+#include <array>
+
 //==============================================================================
 /**
 */
@@ -59,6 +62,10 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
+
+    std::array<FractionalDelay, 2> m_delays;
+
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WevCMakeReverbPluginAudioProcessor)
 };

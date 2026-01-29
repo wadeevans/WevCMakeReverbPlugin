@@ -95,6 +95,11 @@ void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int s
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    for (auto& delay : m_delays)
+    {
+        delay.prepare(sampleRate, 500.0f);
+        delay.setDelay(100.0f);
+    }
 }
 
 void WevCMakeReverbPluginAudioProcessor::releaseResources()
@@ -155,6 +160,10 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
         auto* channelData = buffer.getWritePointer (channel);
 
         // ..do something to the data...
+        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+        {
+            channelData[sample] += m_delays[channel].processSample(channelData[sample]);
+        }
     }
 }
 
