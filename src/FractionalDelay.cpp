@@ -22,7 +22,25 @@ void FractionalDelay::setDelay(float delayInMs)
 
 float FractionalDelay::processSample(float input)
 {
-    return input;  // Pass-through for now
+    // create readPos as float ready for interpolation
+    float readPos = m_writeIndex - m_delayInSamples;
+
+    if (readPos < 0.0f)
+        readPos += m_bufferSize;
+
+
+    // create previousReadIndex and nextReadIndex for interpolation
+    int previousReadIndex = static_cast<int>(readPos);
+    float fractionalPart = readPos - previousReadIndex;
+    int nextReadIndex = (previousReadIndex + 1) % static_cast<int>(m_bufferSize);
+
+    float output = linearInterpolate(m_buffer[previousReadIndex], m_buffer[nextReadIndex], fractionalPart);
+
+    // write input into buffer and advance m_writeIndex
+    m_buffer[m_writeIndex] = input;
+    m_writeIndex = (m_writeIndex + 1) % static_cast<int>(m_bufferSize);
+
+    return output;  
 }
 
 void FractionalDelay::clear()
