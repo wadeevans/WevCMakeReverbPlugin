@@ -28,6 +28,11 @@ WevCMakeReverbPluginAudioProcessor::~WevCMakeReverbPluginAudioProcessor()
 {
 }
 
+juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioProcessor::createParameterLayout()
+{
+    return {};
+}
+
 //==============================================================================
 const juce::String WevCMakeReverbPluginAudioProcessor::getName() const
 {

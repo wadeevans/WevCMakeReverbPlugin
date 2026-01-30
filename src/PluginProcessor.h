@@ -63,6 +63,10 @@ public:
 
 private:
 
+    juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
+
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+
     std::array<FractionalDelay, 2> m_delays;
 
 
