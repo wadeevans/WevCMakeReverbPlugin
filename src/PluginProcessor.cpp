@@ -36,6 +36,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioPro
             "Delay Time",
             juce::NormalisableRange(0.0f, 500.0f, 0.1f),
             100.0f
+        ),
+        std::make_unique<juce::AudioParameterFloat>(
+            juce::ParameterID("reverbVolume", 1),
+            "Reverb Volume",
+            juce::NormalisableRange(0.0f, 1.0f, 0.01f),
+            0.5f
         )
     
     };
@@ -111,7 +117,7 @@ void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int s
     for (auto& delay : m_delays)
     {
         delay.prepare(sampleRate, 500.0f);
-        delay.setDelay(100.0f);
+        // delay.setDelay(100.0f);
     }
 }
 
@@ -174,6 +180,11 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
     for (auto& delay : m_delays)
         delay.setDelay(delayTime);
 
+    auto reverbVolume = apvts.getRawParameterValue("reverbVolume")->load();
+
+    // DEBUG - remove later
+    DBG("DelayTime: " << delayTime << " ReverbVol: " << reverbVolume);
+
     // m_delays[0].setDelay(delayTime);
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
@@ -183,7 +194,7 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
         // ..do something to the data...
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
-            channelData[sample] += m_delays[channel].processSample(channelData[sample]);
+            channelData[sample] += (m_delays[channel].processSample(channelData[sample])) * reverbVolume;
         }
     }
 }
