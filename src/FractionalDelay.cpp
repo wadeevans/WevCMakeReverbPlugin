@@ -1,5 +1,6 @@
 #include "FractionalDelay.h"
 
+
 void FractionalDelay::prepare(double sampleRate, float maxDelayInMs)
 {
     m_sampleRate = static_cast<float>(sampleRate);
@@ -14,14 +15,25 @@ void FractionalDelay::prepare(double sampleRate, float maxDelayInMs)
 void FractionalDelay::setDelay(float delayInMs)
 {
     m_delayInSamples = (delayInMs / 1000.0f) * m_sampleRate;
+    
     // Ensure delay doesn't exceed buffer size
     if (m_delayInSamples > m_bufferSize) 
         m_delayInSamples = m_bufferSize;
-
+    
 }
 
 float FractionalDelay::processSample(float input)
 {
+    // Special case: zero or near-zero delay
+    if (m_delayInSamples < 0.5f)
+    {
+        // Still write to buffer to maintain state
+        m_buffer[m_writeIndex] = input;
+        m_writeIndex = (m_writeIndex + 1) % static_cast<int>(m_bufferSize);
+        return input;
+    }
+
+
     // create readPos as float ready for interpolation
     float readPos = m_writeIndex - m_delayInSamples;
 
