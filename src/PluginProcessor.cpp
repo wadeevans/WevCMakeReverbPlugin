@@ -30,7 +30,15 @@ WevCMakeReverbPluginAudioProcessor::~WevCMakeReverbPluginAudioProcessor()
 
 juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioProcessor::createParameterLayout()
 {
-    return {};
+    return {
+        std::make_unique<juce::AudioParameterFloat>(
+            juce::ParameterID("delayTime", 1),
+            "Delay Time",
+            juce::NormalisableRange(0.0f, 500.0f, 0.1f),
+            100.0f
+        )
+    
+    };
 }
 
 //==============================================================================
