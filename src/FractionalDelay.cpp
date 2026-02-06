@@ -8,24 +8,32 @@ void FractionalDelay::prepare(double sampleRate, float maxDelayInMs)
     m_bufferSize = (maxDelayInMs / 1000.0f) * m_sampleRate;
     m_buffer.resize(static_cast<int>(m_bufferSize));
     m_writeIndex = 0;
+
+    // initialise smoothing parameter
+    m_delayTimeSmoother.reset(0.0f);
+    m_delayTimeSmoother.setSmoothingTime(50.0, m_sampleRate);
+
     clear();
 
 }
 
 void FractionalDelay::setDelay(float delayInMs)
 {
-    m_delayInSamples = (delayInMs / 1000.0f) * m_sampleRate;
+    float delayInSamples = (delayInMs / 1000.0f) * m_sampleRate;
     
     // Ensure delay doesn't exceed buffer size
-    if (m_delayInSamples > m_bufferSize) 
-        m_delayInSamples = m_bufferSize;
+    if (delayInSamples > m_bufferSize) 
+        delayInSamples = m_bufferSize;
+
+    m_delayTimeSmoother.setTargetValue(delayInSamples);
     
 }
 
 float FractionalDelay::processSample(float input)
 {
+    float currentDelay = m_delayTimeSmoother.getNextValue();
     // Special case: zero or near-zero delay
-    if (m_delayInSamples < 0.5f)
+    if (currentDelay < 0.5f)
     {
         // Still write to buffer to maintain state
         m_buffer[m_writeIndex] = input;
@@ -35,7 +43,7 @@ float FractionalDelay::processSample(float input)
 
 
     // create readPos as float ready for interpolation
-    float readPos = m_writeIndex - m_delayInSamples;
+    float readPos = m_writeIndex - currentDelay;
 
     if (readPos < 0.0f)
         readPos += m_bufferSize;

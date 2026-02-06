@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "SmoothedParameter.h"
+
 /**
  * A fractional delay line with linear interpolation.
  * Provides subsample-accurate delays using a circular buffer.
@@ -25,6 +27,8 @@ private:
     int m_writeIndex = 0;
     float m_delayInSamples = 0.0f;
     float m_sampleRate = 44100.0f;
+
+    SmoothedParameter m_delayTimeSmoother;
 
     float linearInterpolate(float previousSample, float nextSample, float fraction)
     {
