@@ -17,5 +17,5 @@ public:
 private:
     float m_currentValue = 0.0f;
     float m_targetValue = 0.0f;
-    float m_smoothingCoefficient = 0.0f; // Calculated based on smoothing time and sample rate
+    float m_smoothingCoefficient = 1.0f; // Calculated based on smoothing time and sample rate
 };
