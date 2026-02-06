@@ -69,7 +69,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/PluginEditor.cpp
         src/PluginEditor.h
         src/FractionalDelay.cpp
-        src/FractionalDelay.h)
+        src/FractionalDelay.h
+        src/SmoothedParameter.cpp
+        src/SmoothedParameter.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE
