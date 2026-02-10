@@ -16,6 +16,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 
 #include "FractionalDelay.h"
+#include "FixedAllPass.h"
 #include <array>
 
 //==============================================================================
@@ -68,6 +69,7 @@ private:
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
     std::array<FractionalDelay, 2> m_delays;
+    std::array<FixedAllPass, 2> m_allpass;
 
 
     //==============================================================================

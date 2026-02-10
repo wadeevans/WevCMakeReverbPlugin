@@ -119,6 +119,11 @@ void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int s
         delay.prepare(sampleRate, 500.0f, 50.0f);
         // delay.setDelay(100.0f);
     }
+
+    for (auto& allpass : m_allpass)
+    {
+        allpass.prepare(sampleRate, 20.0f, 0.7f);
+    }
 }
 
 void WevCMakeReverbPluginAudioProcessor::releaseResources()
@@ -190,7 +195,8 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
         // ..do something to the data...
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
-            channelData[sample] += (m_delays[channel].processSample(channelData[sample])) * reverbVolume;
+           // channelData[sample] += (m_delays[channel].processSample(channelData[sample])) * reverbVolume;
+            channelData[sample] += (m_allpass[channel].processSample(channelData[sample])) * reverbVolume;
         }
     }
 }
