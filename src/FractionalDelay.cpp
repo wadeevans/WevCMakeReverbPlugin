@@ -1,7 +1,7 @@
 #include "FractionalDelay.h"
 
 
-void FractionalDelay::prepare(double sampleRate, float maxDelayInMs)
+void FractionalDelay::prepare(double sampleRate, float maxDelayInMs, float smoothingMs)
 {
     m_sampleRate = static_cast<float>(sampleRate);
     // Convert max delay from milliseconds to samples
@@ -11,7 +11,7 @@ void FractionalDelay::prepare(double sampleRate, float maxDelayInMs)
 
     // initialise smoothing parameter
     m_delayTimeSmoother.reset(0.0f);
-    m_delayTimeSmoother.setSmoothingTime(50.0, m_sampleRate);
+    m_delayTimeSmoother.setSmoothingTime(smoothingMs, m_sampleRate);
 
     clear();
 
@@ -27,6 +27,11 @@ void FractionalDelay::setDelay(float delayInMs)
 
     m_delayTimeSmoother.setTargetValue(delayInSamples);
     
+}
+
+void FractionalDelay::setSmoothingTime(float timeMs)
+{
+    m_delayTimeSmoother.setSmoothingTime(timeMs, m_sampleRate);
 }
 
 float FractionalDelay::processSample(float input)

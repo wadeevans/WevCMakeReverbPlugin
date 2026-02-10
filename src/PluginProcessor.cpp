@@ -116,7 +116,7 @@ void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int s
     // initialisation that you need..
     for (auto& delay : m_delays)
     {
-        delay.prepare(sampleRate, 500.0f);
+        delay.prepare(sampleRate, 500.0f, 50.0f);
         // delay.setDelay(100.0f);
     }
 }

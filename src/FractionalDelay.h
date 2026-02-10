@@ -15,8 +15,9 @@ public:
     FractionalDelay() = default;
     ~FractionalDelay() = default;
 
-    void prepare(double sampleRate, float maxDelayInMs);
+    void prepare(double sampleRate, float maxDelayInMs, float smoothingMs);
     void setDelay(float delayInMs);
+    void setSmoothingTime(float timeMs);
     float processSample(float input);
     void clear();
 
