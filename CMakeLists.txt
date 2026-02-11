@@ -73,7 +73,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/SmoothedParameter.cpp
         src/SmoothedParameter.h
         src/FixedAllPass.cpp
-        src/FixedAllPass.h)
+        src/FixedAllPass.h
+        src/VariableAllPass.cpp
+        src/VariableAllPass.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE

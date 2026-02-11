@@ -17,6 +17,7 @@
 
 #include "FractionalDelay.h"
 #include "FixedAllPass.h"
+#include "VariableAllPass.h"
 #include <array>
 
 //==============================================================================
@@ -69,8 +70,8 @@ private:
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
     std::array<FractionalDelay, 2> m_delays;
-    std::array<FixedAllPass, 2> m_allpass;
-
+    // std::array<FixedAllPass, 2> m_allpass;
+    std::array<VariableAllPass, 2> m_allpass;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WevCMakeReverbPluginAudioProcessor)
