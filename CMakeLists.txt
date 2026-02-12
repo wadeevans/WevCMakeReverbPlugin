@@ -77,7 +77,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/VariableAllPass.cpp
         src/VariableAllPass.h
         src/OnePoleFilter.cpp 
-        src/OnePoleFilter.h )
+        src/OnePoleFilter.h
+        src/FeedbackCombFilter.cpp 
+        src/FeedbackCombFilter.h )
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE
