@@ -55,6 +55,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioPro
             juce::NormalisableRange(0.0f, 0.99f, 0.01f),
             0.7f
         ),
+        std::make_unique<juce::AudioParameterFloat>(
+            juce::ParameterID("cutOffFrequency", 1),
+            "Cut Off Frequency",
+            juce::NormalisableRange(200.0f, 20000.0f, 1.0f, 0.3f),
+            5000.0f
+        ),
     
     };
 }
@@ -136,6 +142,12 @@ void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int s
     {
         allpass.prepare(sampleRate, 100.0f, 0.7f);
     }
+
+    for (auto& dampingFilter : m_dampingFilters)
+    {
+        dampingFilter.prepare(sampleRate);
+        dampingFilter.setFrequencyCutOffCoefficient(500.0);
+    }
 }
 
 void WevCMakeReverbPluginAudioProcessor::releaseResources()
@@ -200,13 +212,18 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
     auto reverbVolume = apvts.getRawParameterValue("reverbVolume")->load();
 
     auto allpassDelayTime = apvts.getRawParameterValue("allpassDelayTime")->load();
-    auto allpassFeedbackGain = apvts.getRawParameterValue("allpassFeedbackGain")->load();
+    auto allpassFeedbackGain = apvts.getRawParameterValue("allpassFeedbackGain")->load(); 
 
     for (auto& allpass : m_allpass)
     {
         allpass.setDelayTime(allpassDelayTime);
         allpass.setFeedbackGain(allpassFeedbackGain);
     }
+
+    auto cutOffFrequency = apvts.getRawParameterValue("cutOffFrequency")->load();
+
+    for (auto& dampingFilter : m_dampingFilters)
+        dampingFilter.setFrequencyCutOffCoefficient(cutOffFrequency);
 
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
@@ -216,8 +233,10 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
         // ..do something to the data...
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
-           // channelData[sample] += (m_delays[channel].processSample(channelData[sample])) * reverbVolume;
-            channelData[sample] += (m_allpass[channel].processSample(channelData[sample])) * reverbVolume;
+            // channelData[sample] += (m_delays[channel].processSample(channelData[sample])) * reverbVolume;
+            // channelData[sample] += (m_allpass[channel].processSample(channelData[sample])) * reverbVolume;
+            channelData[sample] += (m_dampingFilters[channel].processSample(channelData[sample])) * reverbVolume;
+
         }
     }
 }
