@@ -1,5 +1,6 @@
-// FeedbackCombFilter
-// created 
+/// Feedback Comb Filter
+/// Output is wet signal only (taken after delay line).
+/// For reverb and modulation effects: mix with dry signal.
 
 #include "FeedbackCombFilter.h"
 
@@ -24,7 +25,7 @@ float FeedbackCombFilter::processSample(float input)
     float output = input + (m_delayOutput * m_feedbackGain);
     m_delayOutput = m_delayLine.processSample(output);
 
-    return output;
+    return m_delayOutput;
 }
 
 
