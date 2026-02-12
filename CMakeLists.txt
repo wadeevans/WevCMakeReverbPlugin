@@ -75,7 +75,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/FixedAllPass.cpp
         src/FixedAllPass.h
         src/VariableAllPass.cpp
-        src/VariableAllPass.h)
+        src/VariableAllPass.h
+        src/OnePoleFilter.cpp 
+        src/OnePoleFilter.h )
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE
