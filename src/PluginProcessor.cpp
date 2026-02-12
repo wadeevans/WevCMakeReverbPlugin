@@ -61,6 +61,18 @@ juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioPro
             juce::NormalisableRange(200.0f, 20000.0f, 1.0f, 0.3f),
             5000.0f
         ),
+        std::make_unique<juce::AudioParameterFloat>(
+            juce::ParameterID("combDelayTime", 1),
+            "Comb Delay Time",
+            juce::NormalisableRange(1.0f, 100.0f, 0.1f),
+            20.0f
+        ),
+        std::make_unique<juce::AudioParameterFloat>(
+            juce::ParameterID("combFeedbackGain", 1),
+            "Comb Feedback",
+            juce::NormalisableRange(0.0f, 0.95f, 0.01f),  // Cap at 0.95 for safety!
+            0.7f
+        ),
     
     };
 }
@@ -148,6 +160,12 @@ void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int s
         dampingFilter.prepare(sampleRate);
         dampingFilter.setCutoffFrequency(500.0);
     }
+
+    for (auto& combFilter : m_combFilters)
+    {
+        combFilter.prepare(sampleRate, 100.0f, 0.7f, 20.0f);
+
+    }
 }
 
 void WevCMakeReverbPluginAudioProcessor::releaseResources()
@@ -225,6 +243,15 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
     for (auto& dampingFilter : m_dampingFilters)
         dampingFilter.setCutoffFrequency(cutoffFrequency);
 
+    auto combDelay = apvts.getRawParameterValue("combDelayTime")->load();
+    auto combFeedbackGain = apvts.getRawParameterValue("combFeedbackGain")->load();
+
+    for (auto& combFilter : m_combFilters)
+    {
+        combFilter.setDelayTime(combDelay);
+        combFilter.setFeedbackGain(combFeedbackGain);
+    }
+
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
@@ -235,7 +262,9 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
         {
             // channelData[sample] += (m_delays[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] += (m_allpass[channel].processSample(channelData[sample])) * reverbVolume;
-            channelData[sample] = (m_dampingFilters[channel].processSample(channelData[sample]));
+            // channelData[sample] = (m_dampingFilters[channel].processSample(channelData[sample]));
+
+            channelData[sample] += (m_combFilters[channel].processSample(channelData[sample])) * reverbVolume;
 
         }
     }
