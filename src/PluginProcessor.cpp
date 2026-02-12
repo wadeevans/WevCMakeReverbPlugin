@@ -42,7 +42,19 @@ juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioPro
             "Reverb Volume",
             juce::NormalisableRange(0.0f, 1.0f, 0.01f),
             0.5f
-        )
+        ),
+        std::make_unique<juce::AudioParameterFloat>(
+            juce::ParameterID("allpassDelayTime", 1),
+            "AllPass Delay Time",
+            juce::NormalisableRange(0.0f, 100.0f, 0.1f),
+            20.0f
+        ),
+        std::make_unique<juce::AudioParameterFloat>(
+            juce::ParameterID("allpassFeedbackGain", 1),
+            "AllPass Feedback Gain",
+            juce::NormalisableRange(0.0f, 0.99f, 0.01f),
+            0.7f
+        ),
     
     };
 }
@@ -122,7 +134,7 @@ void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int s
 
     for (auto& allpass : m_allpass)
     {
-        allpass.prepare(sampleRate, 20.0f, 0.7f);
+        allpass.prepare(sampleRate, 100.0f, 0.7f);
     }
 }
 
@@ -186,6 +198,15 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
         delay.setDelay(delayTime);
 
     auto reverbVolume = apvts.getRawParameterValue("reverbVolume")->load();
+
+    auto allpassDelayTime = apvts.getRawParameterValue("allpassDelayTime")->load();
+    auto allpassFeedbackGain = apvts.getRawParameterValue("allpassFeedbackGain")->load();
+
+    for (auto& allpass : m_allpass)
+    {
+        allpass.setDelayTime(allpassDelayTime);
+        allpass.setFeedbackGain(allpassFeedbackGain);
+    }
 
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)

@@ -6,7 +6,8 @@
 void VariableAllPass::prepare(double sampleRate, float maxDelayMs, float feedbackGain, float delayMs)
 {
     m_feedbackGain = feedbackGain;
-    m_delayLine.prepare(sampleRate, maxDelayMs, 0.0f);
+    float smoothingMs = maxDelayMs * 0.05;
+    m_delayLine.prepare(sampleRate, maxDelayMs, smoothingMs);
 
     // If delayMs not specified, use maxDelayMs
     float actualDelay = (delayMs < 0.0f) ? maxDelayMs : delayMs;
