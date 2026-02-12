@@ -15,7 +15,7 @@ void OnePoleFilter::prepare(double sampleRate)
     clear();
 }
 
-void OnePoleFilter::setFrequencyCutOffCoefficient(float frequencyHz)
+void OnePoleFilter::setCutoffFrequency(float frequencyHz)
 {
     m_coefficient = std::exp(-2.0f * M_PI * frequencyHz / m_sampleRate);
     m_coefficient = std::clamp(m_coefficient, 0.0f, 0.999f);

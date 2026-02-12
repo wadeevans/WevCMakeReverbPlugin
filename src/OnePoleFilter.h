@@ -7,7 +7,7 @@ public:
     ~OnePoleFilter() = default;
 
     void prepare(double sampleRate);
-    void setFrequencyCutOffCoefficient(float frequencyHz);
+    void setCutoffFrequency(float frequencyHz);
     float processSample(float input);
     void clear();
 

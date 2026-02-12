@@ -56,8 +56,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioPro
             0.7f
         ),
         std::make_unique<juce::AudioParameterFloat>(
-            juce::ParameterID("cutOffFrequency", 1),
-            "Cut Off Frequency",
+            juce::ParameterID("cutoffFrequency", 1),
+            "Cutoff Frequency",
             juce::NormalisableRange(200.0f, 20000.0f, 1.0f, 0.3f),
             5000.0f
         ),
@@ -146,7 +146,7 @@ void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int s
     for (auto& dampingFilter : m_dampingFilters)
     {
         dampingFilter.prepare(sampleRate);
-        dampingFilter.setFrequencyCutOffCoefficient(500.0);
+        dampingFilter.setCutoffFrequency(500.0);
     }
 }
 
@@ -220,10 +220,10 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
         allpass.setFeedbackGain(allpassFeedbackGain);
     }
 
-    auto cutOffFrequency = apvts.getRawParameterValue("cutOffFrequency")->load();
+    auto cutoffFrequency = apvts.getRawParameterValue("cutoffFrequency")->load();
 
     for (auto& dampingFilter : m_dampingFilters)
-        dampingFilter.setFrequencyCutOffCoefficient(cutOffFrequency);
+        dampingFilter.setCutoffFrequency(cutoffFrequency);
 
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
@@ -235,7 +235,7 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
         {
             // channelData[sample] += (m_delays[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] += (m_allpass[channel].processSample(channelData[sample])) * reverbVolume;
-            channelData[sample] += (m_dampingFilters[channel].processSample(channelData[sample])) * reverbVolume;
+            channelData[sample] = (m_dampingFilters[channel].processSample(channelData[sample]));
 
         }
     }
