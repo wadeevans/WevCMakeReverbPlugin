@@ -19,6 +19,10 @@ public:
 
 private:
 
+    FixedAllPass inAllpass1;
+    FixedAllPass inAllpass2;
+    FixedAllPass inAllpass3;
+
     FeedbackCombFilter fbcf1;
     FeedbackCombFilter fbcf2;
     FeedbackCombFilter fbcf3;

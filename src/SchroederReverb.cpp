@@ -6,6 +6,11 @@
 
 void SchroederReverb::prepare(double sampleRate)
 {
+    inAllpass1.prepare(sampleRate, 7.0f, 0.7f);
+    inAllpass2.prepare(sampleRate, 3.0f, 0.7f);
+    inAllpass3.prepare(sampleRate, 1.0f, 0.7f);
+
+
     fbcf1.prepare(sampleRate, 37.0f, 0.8f);
     fbcf2.prepare(sampleRate, 41.0f, 0.8f);
     fbcf3.prepare(sampleRate, 43.0f, 0.8f);
@@ -23,11 +28,15 @@ void SchroederReverb::prepare(double sampleRate)
 
 float SchroederReverb::processSample(float input)
 {
+    float diffused = inAllpass1.processSample(input);
+    diffused = inAllpass2.processSample(diffused);
+    diffused = inAllpass3.processSample(diffused);
+
     // array would be useful here for loop with sum
-    float fbcf1return = fbcf1.processSample(input);
-    float fbcf2return = fbcf2.processSample(input);
-    float fbcf3return = fbcf3.processSample(input);
-    float fbcf4return = fbcf4.processSample(input);
+    float fbcf1return = fbcf1.processSample(diffused);
+    float fbcf2return = fbcf2.processSample(diffused);
+    float fbcf3return = fbcf3.processSample(diffused);
+    float fbcf4return = fbcf4.processSample(diffused);
 
     float firstAllpassInput = fbcf1return + fbcf2return + fbcf3return + fbcf4return;
 
@@ -56,6 +65,10 @@ void SchroederReverb::setDampingCutOffFrequency(float dampingCutoffFrequency)
 
 void SchroederReverb::clear()
 {
+    inAllpass1.clear();
+    inAllpass2.clear();
+    inAllpass3.clear();
+
     fbcf1.clear();
     fbcf2.clear();
     fbcf3.clear();
