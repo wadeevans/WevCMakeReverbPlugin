@@ -75,9 +75,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioPro
         ),
         // Add damping bypass button
         std::make_unique<juce::AudioParameterBool>(
-        juce::ParameterID{"damping", 1},  // ID
-        "Damping",                        // Name shown in DAW
-        false),
+            juce::ParameterID{"damping", 1},  // ID
+            "Damping",                        // Name shown in DAW
+            false),
+        std::make_unique<juce::AudioParameterFloat>(
+            juce::ParameterID("dampingCutoffFrequency", 1),
+            "Damping Cutoff Frequency",
+            juce::NormalisableRange(500.0f, 20000.0f, 1.0f, 0.3f),
+            10000.0f
+        ),
     
     };
 }
@@ -263,10 +269,12 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
     }
 
     bool dampingEnabled = apvts.getRawParameterValue("damping")->load() > 0.5f;
+    auto dampingCutoffFrequency = apvts.getRawParameterValue("dampingCutoffFrequency")->load();
 
     for (auto& reverb : m_reverbs)
     {
         reverb.setDampingEnabled(dampingEnabled);
+        reverb.setDampingCutOffFrequency(dampingCutoffFrequency);
     }
 
 

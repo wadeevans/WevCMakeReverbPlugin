@@ -14,6 +14,7 @@ public:
     void prepare(double sampleRate);
     float processSample(float input);
     void setDampingEnabled(bool dampingEnabled);
+    void setDampingCutOffFrequency(float dampingCutoffFrequency);
     void clear();
 
 private:

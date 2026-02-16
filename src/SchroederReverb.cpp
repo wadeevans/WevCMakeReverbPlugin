@@ -11,11 +11,11 @@ void SchroederReverb::prepare(double sampleRate)
     fbcf3.prepare(sampleRate, 43.0f, 0.8f);
     fbcf4.prepare(sampleRate, 47.0f, 0.8f);
 
-    // Test: Dark damping at 2kHz
-    fbcf1.setDampingCutOffFrequency(2000.0f);
-    fbcf2.setDampingCutOffFrequency(2000.0f);
-    fbcf3.setDampingCutOffFrequency(2000.0f);
-    fbcf4.setDampingCutOffFrequency(2000.0f);
+    //// Test: Dark damping at 2kHz
+    //fbcf1.setDampingCutOffFrequency(2000.0f);
+    //fbcf2.setDampingCutOffFrequency(2000.0f);
+    //fbcf3.setDampingCutOffFrequency(2000.0f);
+    //fbcf4.setDampingCutOffFrequency(2000.0f);
 
     allpass1.prepare(sampleRate, 5.0f, 0.7f);
     allpass2.prepare(sampleRate, 1.70f, 0.7f);
@@ -44,6 +44,14 @@ void SchroederReverb::setDampingEnabled(bool dampingEnabled)
     fbcf2.setDampingEnabled(dampingEnabled);
     fbcf3.setDampingEnabled(dampingEnabled);
     fbcf4.setDampingEnabled(dampingEnabled);
+}
+
+void SchroederReverb::setDampingCutOffFrequency(float dampingCutoffFrequency)
+{
+    fbcf1.setDampingCutOffFrequency(dampingCutoffFrequency);
+    fbcf2.setDampingCutOffFrequency(dampingCutoffFrequency);
+    fbcf3.setDampingCutOffFrequency(dampingCutoffFrequency);
+    fbcf4.setDampingCutOffFrequency(dampingCutoffFrequency);
 }
 
 void SchroederReverb::clear()
