@@ -73,6 +73,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioPro
             juce::NormalisableRange(0.0f, 0.95f, 0.01f),  // Cap at 0.95 for safety!
             0.7f
         ),
+        // Add damping bypass button
+        std::make_unique<juce::AudioParameterBool>(
+        juce::ParameterID{"damping", 1},  // ID
+        "Damping",                        // Name shown in DAW
+        false),
     
     };
 }
@@ -166,6 +171,11 @@ void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int s
         combFilter.prepare(sampleRate, 100.0f, 0.7f, 20.0f);
 
     }
+
+    for (auto& reverb : m_reverbs)
+    {
+        reverb.prepare(sampleRate);
+    }
 }
 
 void WevCMakeReverbPluginAudioProcessor::releaseResources()
@@ -252,6 +262,13 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
         combFilter.setFeedbackGain(combFeedbackGain);
     }
 
+    bool dampingEnabled = apvts.getRawParameterValue("damping")->load() > 0.5f;
+
+    for (auto& reverb : m_reverbs)
+    {
+        reverb.setDampingEnabled(dampingEnabled);
+    }
+
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
@@ -263,8 +280,9 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
             // channelData[sample] += (m_delays[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] += (m_allpass[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] = (m_dampingFilters[channel].processSample(channelData[sample]));
+            // channelData[sample] += (m_combFilters[channel].processSample(channelData[sample])) * reverbVolume;
 
-            channelData[sample] += (m_combFilters[channel].processSample(channelData[sample])) * reverbVolume;
+            channelData[sample] += (m_reverbs[channel].processSample(channelData[sample])) * reverbVolume;
 
         }
     }

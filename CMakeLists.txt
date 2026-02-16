@@ -79,7 +79,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/OnePoleFilter.cpp 
         src/OnePoleFilter.h
         src/FeedbackCombFilter.cpp 
-        src/FeedbackCombFilter.h )
+        src/FeedbackCombFilter.h 
+        src/SchroederReverb.cpp
+        src/SchroederReverb.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE

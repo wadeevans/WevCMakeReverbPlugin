@@ -20,6 +20,7 @@
 #include "VariableAllPass.h"
 #include "OnePoleFilter.h"
 #include "FeedbackCombFilter.h"
+#include "SchroederReverb.h"
 #include <array>
 
 //==============================================================================
@@ -76,6 +77,7 @@ private:
     std::array<VariableAllPass, 2> m_allpass;
     std::array<OnePoleFilter, 2> m_dampingFilters;
     std::array<FeedbackCombFilter, 2> m_combFilters;
+    std::array<SchroederReverb, 2> m_reverbs;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WevCMakeReverbPluginAudioProcessor)

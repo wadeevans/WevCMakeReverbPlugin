@@ -15,14 +15,23 @@ void FeedbackCombFilter::prepare(double sampleRate, float maxDelayMs, float feed
     float actualDelay = (delayMs < 0.0f) ? maxDelayMs : delayMs;
     m_delayLine.setDelay(actualDelay);
 
+    m_dampingFilter.prepare(sampleRate);
+    m_dampingFilter.setCutoffFrequency(10000.0f);
+
     clear();
 }
 
 float FeedbackCombFilter::processSample(float input)
 {
     // y(n) = x(n) + g * y(n-M)
+    float dampedOutput;
 
-    float output = input + (m_delayOutput * m_feedbackGain);
+    if (m_dampingEnabled)
+        dampedOutput = m_dampingFilter.processSample(m_delayOutput);
+    else
+        dampedOutput = m_delayOutput;  // TRUE BYPASS
+
+    float output = input + (dampedOutput * m_feedbackGain);
     m_delayOutput = m_delayLine.processSample(output);
 
     return m_delayOutput;
@@ -32,6 +41,7 @@ float FeedbackCombFilter::processSample(float input)
 void FeedbackCombFilter::clear()
 {
     m_delayLine.clear();
+    m_dampingFilter.clear();
     m_delayOutput = 0.0f; // Also reset the output
 }
 
