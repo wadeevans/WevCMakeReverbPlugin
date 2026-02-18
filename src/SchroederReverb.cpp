@@ -38,11 +38,11 @@ float SchroederReverb::processSample(float input)
     float fbcf3return = fbcf3.processSample(diffused);
     float fbcf4return = fbcf4.processSample(diffused);
 
-    float firstAllpassInput = fbcf1return + fbcf2return + fbcf3return + fbcf4return;
+    float output = fbcf1return + fbcf2return + fbcf3return + fbcf4return;
 
-    float secondAllPassInput = allpass1.processSample(firstAllpassInput);
+    //output = allpass1.processSample(output);
 
-    float output = allpass2.processSample(secondAllPassInput);
+    //output = allpass2.processSample(output);
 
     return output;
 }
