@@ -38,7 +38,7 @@ float SchroederReverb::processSample(float input)
     float fbcf3return = fbcf3.processSample(diffused);
     float fbcf4return = fbcf4.processSample(diffused);
 
-    float output = fbcf1return + fbcf2return + fbcf3return + fbcf4return;
+    float output = (fbcf1return + fbcf2return + fbcf3return + fbcf4return) / static_cast<float>(NUM_COMBS);
 
     //output = allpass1.processSample(output);
 

@@ -19,6 +19,8 @@ public:
 
 private:
 
+    static constexpr int NUM_COMBS = 4;
+
     FixedAllPass inAllpass1;
     FixedAllPass inAllpass2;
     FixedAllPass inAllpass3;
