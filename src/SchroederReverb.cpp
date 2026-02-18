@@ -11,10 +11,10 @@ void SchroederReverb::prepare(double sampleRate)
     inAllpass3.prepare(sampleRate, 1.0f, 0.7f);
 
 
-    fbcf1.prepare(sampleRate, 37.0f, 0.8f);
-    fbcf2.prepare(sampleRate, 41.0f, 0.8f);
-    fbcf3.prepare(sampleRate, 43.0f, 0.8f);
-    fbcf4.prepare(sampleRate, 47.0f, 0.8f);
+    fbcf1.prepare(sampleRate, 37.0f, 0.84f);
+    fbcf2.prepare(sampleRate, 41.0f, 0.82f);
+    fbcf3.prepare(sampleRate, 43.0f, 0.80f);
+    fbcf4.prepare(sampleRate, 47.0f, 0.78f);
 
     //// Test: Dark damping at 2kHz
     //fbcf1.setDampingCutOffFrequency(2000.0f);

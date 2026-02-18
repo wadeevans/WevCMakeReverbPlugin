@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.30)
 
 # Set the project name and version
-project(WevCMakeReverbPlugin VERSION 1.0.0 LANGUAGES C CXX)
+project(WevCMakeReverbPlugin VERSION 1.0.1 LANGUAGES C CXX)
 
 # One-time class renaming (only runs if source files still have "Template" in them)
 file(GLOB_RECURSE SOURCE_FILES 
@@ -50,7 +50,7 @@ juce_add_plugin(${PROJECT_NAME}
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE           # Does the editor need keyboard focus?
     COPY_PLUGIN_AFTER_BUILD TRUE                # Should the plugin be installed to a default location after building?
     PLUGIN_MANUFACTURER_CODE Weva               # A four-character manufacturer id with at least one upper-case character
-    PLUGIN_CODE Rev1                            # A unique four-character plugin id with exactly one upper-case character                                            # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
+    PLUGIN_CODE Rev2                            # A unique four-character plugin id with exactly one upper-case character                                            # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
     FORMATS VST3 AAX Standalone                     # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     VST3_CATEGORIES Fx 
     AAX_CATEGORY AAX_ePlugInCategory_Effect 
