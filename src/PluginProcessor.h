@@ -21,7 +21,6 @@
 #include "OnePoleFilter.h"
 #include "FeedbackCombFilter.h"
 #include "SchroederReverb.h"
-#include "FeedforwardCombFilter.h"
 #include <array>
 
 //==============================================================================
