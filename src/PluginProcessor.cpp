@@ -84,6 +84,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioPro
             juce::NormalisableRange(500.0f, 20000.0f, 1.0f, 0.3f),
             10000.0f
         ),
+        
     
     };
 }
@@ -182,6 +183,8 @@ void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int s
     {
         reverb.prepare(sampleRate);
     }
+
+    
 }
 
 void WevCMakeReverbPluginAudioProcessor::releaseResources()
@@ -277,6 +280,8 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
         reverb.setDampingCutOffFrequency(dampingCutoffFrequency);
     }
 
+    
+
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
@@ -289,7 +294,6 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
             // channelData[sample] += (m_allpass[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] = (m_dampingFilters[channel].processSample(channelData[sample]));
             // channelData[sample] += (m_combFilters[channel].processSample(channelData[sample])) * reverbVolume;
-
             channelData[sample] += (m_reverbs[channel].processSample(channelData[sample])) * reverbVolume;
 
         }
