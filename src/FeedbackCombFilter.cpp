@@ -7,8 +7,8 @@
 void FeedbackCombFilter::prepare(double sampleRate, float maxDelayMs, float feedbackGain, float delayMs)
 {
     m_feedbackGain = feedbackGain;
-    // float smoothingMs = maxDelayMs * 0.05f;
-    float smoothingMs = 0.0f;
+    float smoothingMs = maxDelayMs * 0.05f;
+    // float smoothingMs = 0.0f;
     m_delayLine.prepare(sampleRate, maxDelayMs, smoothingMs);
 
     // If delayMs not specified, use maxDelayMs
