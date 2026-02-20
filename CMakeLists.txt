@@ -81,7 +81,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/FeedbackCombFilter.cpp 
         src/FeedbackCombFilter.h 
         src/SchroederReverb.cpp
-        src/SchroederReverb.h)
+        src/SchroederReverb.h
+        src/FeedforwardCombFilter.cpp
+        src/FeedforwardCombFilter.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE
