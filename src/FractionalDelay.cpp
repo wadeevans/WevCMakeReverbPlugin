@@ -55,7 +55,8 @@ float FractionalDelay::processSample(float input)
 
 
     // create previousReadIndex and nextReadIndex for interpolation
-    int previousReadIndex = static_cast<int>(readPos);
+    // int previousReadIndex = static_cast<int>(readPos);
+    int previousReadIndex = static_cast<int>(readPos) % static_cast<int>(m_bufferSize);
     float fractionalPart = readPos - previousReadIndex;
     int nextReadIndex = (previousReadIndex + 1) % static_cast<int>(m_bufferSize);
 
