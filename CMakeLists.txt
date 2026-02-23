@@ -83,7 +83,10 @@ target_compile_definitions(${PROJECT_NAME}
         src/SchroederReverb.cpp
         src/SchroederReverb.h
         src/FeedforwardCombFilter.cpp
-        src/FeedforwardCombFilter.h)
+        src/FeedforwardCombFilter.h
+        src/MixingMatrix4.h
+        src/Hadamard4.cpp
+        src/Hadamard4.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE
