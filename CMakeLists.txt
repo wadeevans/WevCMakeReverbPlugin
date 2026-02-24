@@ -86,7 +86,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/FeedforwardCombFilter.h
         src/MixingMatrix4.h
         src/Hadamard4.cpp
-        src/Hadamard4.h)
+        src/Hadamard4.h
+        src/FDN4.cpp
+        src/FDN4.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE
