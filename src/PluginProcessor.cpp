@@ -189,6 +189,11 @@ void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int s
         fdn.prepare(sampleRate);
     }
 
+    for (auto& intDelay : m_intDelays)
+    {
+        intDelay.prepare(8000);
+    }
+
     
 }
 
@@ -300,7 +305,8 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
             // channelData[sample] = (m_dampingFilters[channel].processSample(channelData[sample]));
             // channelData[sample] += (m_combFilters[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] += (m_reverbs[channel].processSample(channelData[sample])) * reverbVolume;
-            channelData[sample] = (m_fdns[channel].processSample(channelData[sample])) * reverbVolume;
+            // channelData[sample] = (m_fdns[channel].processSample(channelData[sample])) * reverbVolume;
+            channelData[sample] += (m_intDelays[channel].processSample(channelData[sample])) * reverbVolume;
 
         }
     }

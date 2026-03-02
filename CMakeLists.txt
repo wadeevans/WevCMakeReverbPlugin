@@ -88,7 +88,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/Hadamard4.cpp
         src/Hadamard4.h
         src/FDN4.cpp
-        src/FDN4.h)
+        src/FDN4.h
+        src/IntegerDelay.cpp
+        src/IntegerDelay.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE

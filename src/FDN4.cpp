@@ -28,7 +28,7 @@ void FDN4::prepare(double sampleRate)
     for (auto& dampingFilter : m_dampingFilters)
     {
         dampingFilter.prepare(sampleRate);
-        dampingFilter.setCutoffFrequency(10000.0f);
+        dampingFilter.setCutoffFrequency(20000.0f);
     }
 
     for (auto& delayOutput : m_delayOutputs)

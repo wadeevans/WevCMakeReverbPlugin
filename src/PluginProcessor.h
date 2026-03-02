@@ -27,6 +27,7 @@
 #include "FeedbackCombFilter.h"
 #include "SchroederReverb.h"
 #include "FDN4.h"
+#include "IntegerDelay.h"
 
 
 //==============================================================================
@@ -85,6 +86,7 @@ private:
     std::array<FeedbackCombFilter, 2> m_combFilters;
     std::array<SchroederReverb, 2> m_reverbs;
     std::array<FDN4, 2> m_fdns;
+    std::array<IntegerDelay, 2> m_intDelays;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WevCMakeReverbPluginAudioProcessor)
