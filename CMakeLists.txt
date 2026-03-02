@@ -90,7 +90,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/FDN4.cpp
         src/FDN4.h
         src/IntegerDelay.cpp
-        src/IntegerDelay.h)
+        src/IntegerDelay.h
+        src/IntegerFBCF.cpp
+        src/IntegerFBCF.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE
