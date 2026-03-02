@@ -6,7 +6,9 @@
 class IntegerFBCF
 {
 public:
-    void prepare(double sampleRate, int delayInSamples, float feedbackGain = 0.7f);
+    void prepare(double sampleRate, int delayInSamples, float feedbackGain = 0.7f); 
+    void setDampingEnabled(bool dampingEnabled) { m_dampingEnabled = dampingEnabled; }
+    void setDampingCutOffFrequency(float frequencyHz) { m_dampingFilter.setCutoffFrequency(frequencyHz); }
     float processSample(float input);
     void clear();
 
