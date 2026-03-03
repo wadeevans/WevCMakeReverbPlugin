@@ -93,7 +93,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/IntegerDelay.h
         src/IntegerFBCF.cpp
         src/IntegerFBCF.h
-        src/OutputTap.h)
+        src/OutputTap.h
+        src/IntegerAllPass.cpp
+        src/IntegerAllPass.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE
