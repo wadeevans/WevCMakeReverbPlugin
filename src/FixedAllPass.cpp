@@ -22,4 +22,5 @@ float FixedAllPass::processSample(float input)
 void FixedAllPass::clear()
 {
     m_delayLine.clear();
+    m_delayOutput = 0.0f;
 }
