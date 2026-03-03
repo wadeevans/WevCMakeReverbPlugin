@@ -30,7 +30,7 @@ void WevCMakeReverbPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::white);
     g.setFont (juce::FontOptions (15.0f));
-    g.drawFittedText ("Integer FBCF", getLocalBounds(), juce::Justification::centred, 1);
+    g.drawFittedText ("Pre/Post Delay", getLocalBounds(), juce::Justification::centred, 1);
 }
 
 void WevCMakeReverbPluginAudioProcessorEditor::resized()

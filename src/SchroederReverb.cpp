@@ -63,6 +63,16 @@ void SchroederReverb::setDampingCutOffFrequency(float dampingCutoffFrequency)
     fbcf4.setDampingCutOffFrequency(dampingCutoffFrequency);
 }
 
+void SchroederReverb::setPreDelayEnabled(bool preDelayEnabled)
+{
+    OutputTap tap = preDelayEnabled ? OutputTap::PreDelay : OutputTap::PostDelay;
+
+    fbcf1.setOutputTap(tap);
+    fbcf2.setOutputTap(tap);
+    fbcf3.setOutputTap(tap);
+    fbcf4.setOutputTap(tap);
+}
+
 void SchroederReverb::clear()
 {
     inAllpass1.clear();

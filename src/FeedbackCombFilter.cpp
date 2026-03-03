@@ -34,7 +34,8 @@ float FeedbackCombFilter::processSample(float input)
     float output = input + (dampedOutput * m_feedbackGain);
     m_delayOutput = m_delayLine.processSample(output);
 
-    return m_delayOutput;
+    // return m_delayOutput;
+    return (m_outputTap == OutputTap::PostDelay) ? m_delayOutput : output;
 }
 
 

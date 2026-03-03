@@ -77,12 +77,18 @@ juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioPro
         std::make_unique<juce::AudioParameterBool>(
             juce::ParameterID{"damping", 1},  // ID
             "Damping",                        // Name shown in DAW
-            false),
+            false
+        ),
         std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID("dampingCutoffFrequency", 1),
             "Damping Cutoff Frequency",
             juce::NormalisableRange(500.0f, 20000.0f, 1.0f, 0.3f),
             10000.0f
+        ),
+        std::make_unique<juce::AudioParameterBool>(
+            juce::ParameterID{"predelaytap", 1},  // ID
+            "Pre Delay Tap",                        // Name shown in DAW
+            false
         ),
         
     
@@ -288,6 +294,7 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
 
     bool dampingEnabled = apvts.getRawParameterValue("damping")->load() > 0.5f;
     auto dampingCutoffFrequency = apvts.getRawParameterValue("dampingCutoffFrequency")->load();
+    bool predelayEnabled = apvts.getRawParameterValue("predelaytap")->load() > 0.5f;
 
     for (auto& reverb : m_reverbs)
     {
@@ -315,10 +322,10 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
             // channelData[sample] += (m_allpass[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] = (m_dampingFilters[channel].processSample(channelData[sample]));
             // channelData[sample] += (m_combFilters[channel].processSample(channelData[sample])) * reverbVolume;
-            // channelData[sample] += (m_reverbs[channel].processSample(channelData[sample])) * reverbVolume;
+            channelData[sample] += (m_reverbs[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] = (m_fdns[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] += (m_intDelays[channel].processSample(channelData[sample])) * reverbVolume;
-            channelData[sample] += (m_intCombFilters[channel].processSample(channelData[sample])) * reverbVolume;
+            // channelData[sample] += (m_intCombFilters[channel].processSample(channelData[sample])) * reverbVolume;
 
         }
     }
