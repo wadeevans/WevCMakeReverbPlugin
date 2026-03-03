@@ -295,6 +295,12 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
         reverb.setDampingCutOffFrequency(dampingCutoffFrequency);
     }
 
+    for (auto& intCombFilter : m_intCombFilters)
+    {
+        intCombFilter.setDampingEnabled(dampingEnabled);
+        intCombFilter.setDampingCutOffFrequency(dampingCutoffFrequency);
+    }
+
     
 
 
