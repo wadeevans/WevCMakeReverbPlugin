@@ -294,12 +294,13 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
 
     bool dampingEnabled = apvts.getRawParameterValue("damping")->load() > 0.5f;
     auto dampingCutoffFrequency = apvts.getRawParameterValue("dampingCutoffFrequency")->load();
-    bool predelayEnabled = apvts.getRawParameterValue("predelaytap")->load() > 0.5f;
+    bool preDelayEnabled = apvts.getRawParameterValue("predelaytap")->load() > 0.5f;
 
     for (auto& reverb : m_reverbs)
     {
         reverb.setDampingEnabled(dampingEnabled);
         reverb.setDampingCutOffFrequency(dampingCutoffFrequency);
+        reverb.setPreDelayEnabled(preDelayEnabled);
     }
 
     for (auto& intCombFilter : m_intCombFilters)
