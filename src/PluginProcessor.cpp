@@ -335,11 +335,11 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
             // channelData[sample] += (m_allpass[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] = (m_dampingFilters[channel].processSample(channelData[sample]));
             // channelData[sample] += (m_combFilters[channel].processSample(channelData[sample])) * reverbVolume;
-            // channelData[sample] += (m_reverbs[channel].processSample(channelData[sample])) * reverbVolume;
+            channelData[sample] += (m_reverbs[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] = (m_fdns[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] += (m_intDelays[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] += (m_intCombFilters[channel].processSample(channelData[sample])) * reverbVolume;
-            channelData[sample] += (m_JCReverbs[channel].processSample(channelData[sample])) * reverbVolume;
+            // channelData[sample] += (m_JCReverbs[channel].processSample(channelData[sample])) * reverbVolume;
 
         }
     }

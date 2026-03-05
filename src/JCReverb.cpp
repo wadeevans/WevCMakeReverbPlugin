@@ -19,7 +19,7 @@ void JCReverb::prepare(double sampleRate)
 
     for (size_t i = 0; i < m_fbcfs.size(); i++)
     {
-        m_fbcfs[i].prepare(sampleRate, fbcfLengths[i], 0.9f);
+        m_fbcfs[i].prepare(sampleRate, fbcfLengths[i], 0.9f); // set up array of floats to replace feedbackGains
     }
 
     int outAllPassLengths[2] = { 221, 73 };

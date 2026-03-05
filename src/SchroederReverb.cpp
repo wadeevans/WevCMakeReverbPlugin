@@ -6,84 +6,95 @@
 
 void SchroederReverb::prepare(double sampleRate)
 {
-    inAllpass1.prepare(sampleRate, 7.0f, 0.7f);
-    inAllpass2.prepare(sampleRate, 3.0f, 0.7f);
-    inAllpass3.prepare(sampleRate, 1.0f, 0.7f);
+    float inAllPassLengths[3] = { 7.0f, 3.0f, 1.0f };
+    float inAllPassGains[3] = { 0.7f, 0.7f, 0.7f };
+
+    for (size_t i = 0; i < m_inAllPasses.size(); i++)
+    {
+        m_inAllPasses[i].prepare(sampleRate, inAllPassLengths[i], inAllPassGains[i]);
+    }
+
+    float fbcfLengths[4] = { 37.0f, 41.0f, 43.0f, 47.0f };
+    float fbcfGains[4] = { 0.84f, 0.82f, 0.80f, 0.78f };
+
+    for (size_t i = 0; i < m_fbcfs.size(); i++)
+    {
+        m_fbcfs[i].prepare(sampleRate, fbcfLengths[i], fbcfGains[i]); // set up array of floats to replace feedbackGains
+    }
 
 
-    fbcf1.prepare(sampleRate, 37.0f, 0.84f);
-    fbcf2.prepare(sampleRate, 41.0f, 0.82f);
-    fbcf3.prepare(sampleRate, 43.0f, 0.80f);
-    fbcf4.prepare(sampleRate, 47.0f, 0.78f);
+    float outAllPassLengths[2] = { 5.0f, 1.70f };
+    float outAllPassGains[2] = { 0.7f, 0.7f };
 
-    //// Test: Dark damping at 2kHz
-    //fbcf1.setDampingCutOffFrequency(2000.0f);
-    //fbcf2.setDampingCutOffFrequency(2000.0f);
-    //fbcf3.setDampingCutOffFrequency(2000.0f);
-    //fbcf4.setDampingCutOffFrequency(2000.0f);
+    for (size_t i = 0; i < m_outAllPasses.size(); i++)
+    {
+        m_outAllPasses[i].prepare(sampleRate, outAllPassLengths[i], outAllPassGains[i]);
+    }
 
-    allpass1.prepare(sampleRate, 5.0f, 0.7f);
-    allpass2.prepare(sampleRate, 1.70f, 0.7f);
 }
 
 float SchroederReverb::processSample(float input)
 {
-    float diffused = inAllpass1.processSample(input);
-    diffused = inAllpass2.processSample(diffused);
-    diffused = inAllpass3.processSample(diffused);
+    float diffused = m_inAllPasses[0].processSample(input);
+    diffused = m_inAllPasses[1].processSample(diffused);
+    diffused = m_inAllPasses[2].processSample(diffused);
 
     // array would be useful here for loop with sum
-    float fbcf1return = fbcf1.processSample(diffused);
-    float fbcf2return = fbcf2.processSample(diffused);
-    float fbcf3return = fbcf3.processSample(diffused);
-    float fbcf4return = fbcf4.processSample(diffused);
+    float output = 0.0f;
+    for (auto& fbcf : m_fbcfs)
+    {
+        output += fbcf.processSample(diffused);
+    }
 
-    float output = (fbcf1return + fbcf2return + fbcf3return + fbcf4return) / static_cast<float>(NUM_COMBS);
+    output /= static_cast<float>(NUM_COMBS);
 
-    //output = allpass1.processSample(output);
+    // output = m_outAllPasses[0].processSample(output);
 
-    //output = allpass2.processSample(output);
+    // output = m_outAllPasses[1].processSample(output);
 
     return output;
 }
 
 void SchroederReverb::setDampingEnabled(bool dampingEnabled)
 {
-    fbcf1.setDampingEnabled(dampingEnabled);
-    fbcf2.setDampingEnabled(dampingEnabled);
-    fbcf3.setDampingEnabled(dampingEnabled);
-    fbcf4.setDampingEnabled(dampingEnabled);
+    for (auto& fbcf : m_fbcfs)
+    {
+        fbcf.setDampingEnabled(dampingEnabled);
+    }
 }
 
 void SchroederReverb::setDampingCutOffFrequency(float dampingCutoffFrequency)
 {
-    fbcf1.setDampingCutOffFrequency(dampingCutoffFrequency);
-    fbcf2.setDampingCutOffFrequency(dampingCutoffFrequency);
-    fbcf3.setDampingCutOffFrequency(dampingCutoffFrequency);
-    fbcf4.setDampingCutOffFrequency(dampingCutoffFrequency);
+    for (auto& fbcf : m_fbcfs)
+    {
+        fbcf.setDampingCutOffFrequency(dampingCutoffFrequency);
+    }
 }
 
 void SchroederReverb::setPreDelayEnabled(bool preDelayEnabled)
 {
     OutputTap tap = preDelayEnabled ? OutputTap::PreDelay : OutputTap::PostDelay;
 
-    fbcf1.setOutputTap(tap);
-    fbcf2.setOutputTap(tap);
-    fbcf3.setOutputTap(tap);
-    fbcf4.setOutputTap(tap);
+    for (auto& fbcf : m_fbcfs)
+    {
+        fbcf.setOutputTap(tap);
+    }
 }
 
 void SchroederReverb::clear()
 {
-    inAllpass1.clear();
-    inAllpass2.clear();
-    inAllpass3.clear();
+    for (auto& inAllPass : m_inAllPasses)
+    {
+        inAllPass.clear();
+    }
 
-    fbcf1.clear();
-    fbcf2.clear();
-    fbcf3.clear();
-    fbcf4.clear();
+    for (auto& fbcf : m_fbcfs)
+    {
+        fbcf.clear();
+    }
 
-    allpass1.clear();
-    allpass2.clear();
+    for (auto& outAllPass : m_outAllPasses)
+    {
+        outAllPass.clear();
+    }
 }

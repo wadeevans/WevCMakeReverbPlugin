@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include "FeedbackCombFilter.h"
 #include "FixedAllPass.h"
 
@@ -22,16 +24,8 @@ private:
 
     static constexpr int NUM_COMBS = 4;
 
-    FixedAllPass inAllpass1;
-    FixedAllPass inAllpass2;
-    FixedAllPass inAllpass3;
-
-    FeedbackCombFilter fbcf1;
-    FeedbackCombFilter fbcf2;
-    FeedbackCombFilter fbcf3;
-    FeedbackCombFilter fbcf4;
-
-    FixedAllPass allpass1;
-    FixedAllPass allpass2;
+    std::array<FixedAllPass, 3> m_inAllPasses;
+    std::array<FeedbackCombFilter, 4> m_fbcfs;
+    std::array<FixedAllPass, 2> m_outAllPasses;
 
 };
