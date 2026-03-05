@@ -205,6 +205,11 @@ void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int s
         intCombFilter.prepare(sampleRate, 200, 0.8);
     }
 
+    for (auto& jcreverb : m_JCReverbs)
+    {
+        jcreverb.prepare(sampleRate);
+    }
+
     
 }
 
@@ -309,6 +314,13 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
         intCombFilter.setDampingCutOffFrequency(dampingCutoffFrequency);
     }
 
+    for (auto& jcreverb : m_JCReverbs)
+    {
+        jcreverb.setDampingEnabled(dampingEnabled);
+        jcreverb.setDampingCutOffFrequency(dampingCutoffFrequency);
+        jcreverb.setPreDelayEnabled(preDelayEnabled);
+    }
+
     
 
 
@@ -323,10 +335,11 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
             // channelData[sample] += (m_allpass[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] = (m_dampingFilters[channel].processSample(channelData[sample]));
             // channelData[sample] += (m_combFilters[channel].processSample(channelData[sample])) * reverbVolume;
-            channelData[sample] += (m_reverbs[channel].processSample(channelData[sample])) * reverbVolume;
+            // channelData[sample] += (m_reverbs[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] = (m_fdns[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] += (m_intDelays[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] += (m_intCombFilters[channel].processSample(channelData[sample])) * reverbVolume;
+            channelData[sample] += (m_JCReverbs[channel].processSample(channelData[sample])) * reverbVolume;
 
         }
     }

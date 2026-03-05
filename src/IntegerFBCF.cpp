@@ -29,6 +29,7 @@ float IntegerFBCF::processSample(float input)
 
     // return m_delayOutput;
     return (m_outputTap == OutputTap::PostDelay) ? m_delayOutput : output;
+    // return (m_outputTap == OutputTap::PostDelay) ? m_delayOutput : 0.0f; // test case
 }
 
 void IntegerFBCF::clear()

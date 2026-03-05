@@ -29,6 +29,7 @@
 #include "FDN4.h"
 #include "IntegerDelay.h"
 #include "IntegerFBCF.h"
+#include "JCReverb.h"
 
 
 //==============================================================================
@@ -89,6 +90,7 @@ private:
     std::array<FDN4, 2> m_fdns;
     std::array<IntegerDelay, 2> m_intDelays;
     std::array<IntegerFBCF, 2> m_intCombFilters;
+    std::array<JCReverb, 2> m_JCReverbs;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WevCMakeReverbPluginAudioProcessor)

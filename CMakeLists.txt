@@ -95,7 +95,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/IntegerFBCF.h
         src/OutputTap.h
         src/IntegerAllPass.cpp
-        src/IntegerAllPass.h)
+        src/IntegerAllPass.h
+        src/JCReverb.cpp
+        src/JCReverb.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE
