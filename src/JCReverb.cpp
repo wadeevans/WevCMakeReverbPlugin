@@ -16,10 +16,11 @@ void JCReverb::prepare(double sampleRate)
 
 
     int fbcfLengths[4] = { 1116, 1356, 1422, 1617 };
+    float fbcfGains[4] = { 0.9f, 0.9f, 0.9f, 0.9f };
 
     for (size_t i = 0; i < m_fbcfs.size(); i++)
     {
-        m_fbcfs[i].prepare(sampleRate, fbcfLengths[i], 0.9f); // set up array of floats to replace feedbackGains
+        m_fbcfs[i].prepare(sampleRate, fbcfLengths[i], fbcfGains[i]); // set up array of floats to replace feedbackGains
     }
 
     int outAllPassLengths[2] = { 221, 73 };
@@ -41,12 +42,21 @@ float JCReverb::processSample(float input)
     diffused = m_inAllPasses[2].processSample(diffused);
 
     // array would be useful here for loop with sum
-    float fbcf0return = m_fbcfs[0].processSample(diffused);
+    
+    float output = 0.0f;
+    for (auto& fbcf : m_fbcfs)
+    {
+        output += fbcf.processSample(diffused);
+    }
+
+    output /= static_cast<float>(NUM_COMBS);
+
+    /*float fbcf0return = m_fbcfs[0].processSample(diffused);
     float fbcf1return = m_fbcfs[1].processSample(diffused);
     float fbcf2return = m_fbcfs[2].processSample(diffused);
     float fbcf3return = m_fbcfs[3].processSample(diffused);
 
-    float output = (fbcf0return + fbcf1return + fbcf2return + fbcf3return) / static_cast<float>(NUM_COMBS);
+    float output = (fbcf0return + fbcf1return + fbcf2return + fbcf3return) / static_cast<float>(NUM_COMBS);*/
 
     // output = m_outAllPasses[0].processSample(output);
     // output = m_outAllPasses[1].processSample(output);
