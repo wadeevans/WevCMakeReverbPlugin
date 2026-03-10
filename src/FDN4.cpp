@@ -51,7 +51,10 @@ float FDN4::processSample(float input)
 
     for (int i = 0; i < 4; i++)
     {
-        delayInputs[i] = m_dampingFilters[i].processSample(mixingMatrixOutputs[i]) * m_feedbackGain + input;
+        if (m_dampingEnabled)
+            delayInputs[i] = m_dampingFilters[i].processSample(mixingMatrixOutputs[i]) * m_feedbackGain + input;
+        else
+            delayInputs[i] = mixingMatrixOutputs[i] * m_feedbackGain + input;
     }
     
     for (int i = 0; i < 4; i++)
@@ -62,6 +65,13 @@ float FDN4::processSample(float input)
 
     return (m_delayOutputs[0] + m_delayOutputs[1] + m_delayOutputs[2] + m_delayOutputs[3]) * 0.25f;
 }
+
+void FDN4::setDampingCutOffFrequency(float frequencyHz)
+{
+    for (auto& dampingFilter : m_dampingFilters)
+        dampingFilter.setCutoffFrequency(frequencyHz);
+}
+
 
 void FDN4::clear()
 {
@@ -83,6 +93,7 @@ void FDN4::clear()
 
 void FDN4::setDelayTimes(const std::array<float, 4>& delayTimes)
 {
-    
+    for (int i = 0; i < 4; i++)
+        m_delayLines[i].setDelay(delayTimes[i]);
 
 }

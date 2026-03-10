@@ -87,7 +87,7 @@ private:
     std::array<OnePoleFilter, 2> m_dampingFilters;
     std::array<FeedbackCombFilter, 2> m_combFilters;
     std::array<SchroederReverb, 2> m_reverbs;
-    std::array<FDN4, 2> m_fdns;
+    std::array<FDN4, 2> m_fdn4s;
     std::array<IntegerDelay, 2> m_intDelays;
     std::array<IntegerFBCF, 2> m_intCombFilters;
     std::array<JCReverb, 2> m_JCReverbs;
