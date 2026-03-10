@@ -52,9 +52,9 @@ float FDN4::processSample(float input)
     for (int i = 0; i < 4; i++)
     {
         if (m_dampingEnabled)
-            delayInputs[i] = m_dampingFilters[i].processSample(mixingMatrixOutputs[i]) * m_feedbackGain + input;
+            delayInputs[i] = m_dampingFilters[i].processSample(mixingMatrixOutputs[i]) * m_feedbackGains[i] + input;
         else
-            delayInputs[i] = mixingMatrixOutputs[i] * m_feedbackGain + input;
+            delayInputs[i] = mixingMatrixOutputs[i] * m_feedbackGains[i] + input;
     }
     
     for (int i = 0; i < 4; i++)

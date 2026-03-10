@@ -16,7 +16,7 @@ void JCReverb::prepare(double sampleRate)
 
 
     int fbcfLengths[4] = { 1116, 1356, 1422, 1617 };
-    float fbcfGains[4] = { 0.9f, 0.9f, 0.9f, 0.9f };
+    float fbcfGains[4] = { 0.84f, 0.82f, 0.80f, 0.78f };
 
     for (size_t i = 0; i < m_fbcfs.size(); i++)
     {
