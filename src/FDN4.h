@@ -24,7 +24,7 @@ public:
 private:
 
     
-    std::array<float, 4> m_feedbackGains { 0.84f, 0.82f, 0.80f, 0.78f };
+    std::array<float, 4> m_feedbackGains { 0.84f, 0.82f, 0.80f, 0.78f }; // move this to reverb implementation eventually
     bool m_dampingEnabled = false;
 
     std::array<FractionalDelay, 4> m_delayLines;
