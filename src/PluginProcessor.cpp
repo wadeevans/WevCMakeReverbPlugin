@@ -90,6 +90,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioPro
             "Pre Delay Tap",                        // Name shown in DAW
             false
         ),
+        std::make_unique<juce::AudioParameterChoice>(
+            juce::ParameterID{"reverbType", 1},
+            "Reverb Type",
+            getReverbTypeNames(),
+            0  // default index
+        ),
         
     
     };
@@ -210,6 +216,11 @@ void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int s
         jcreverb.prepare(sampleRate);
     }
 
+    for (auto& fdn4reverb : m_FDN4Reverbs)
+    {
+        fdn4reverb.prepare(sampleRate);
+    }
+
     
 }
 
@@ -301,6 +312,8 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
     auto dampingCutoffFrequency = apvts.getRawParameterValue("dampingCutoffFrequency")->load();
     bool preDelayEnabled = apvts.getRawParameterValue("predelaytap")->load() > 0.5f;
 
+    auto reverbType = static_cast<ReverbType>((int)apvts.getRawParameterValue("reverbType")->load());
+
     for (auto& reverb : m_reverbs)
     {
         reverb.setDampingEnabled(dampingEnabled);
@@ -327,6 +340,12 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
         fdn4.setDampingCutOffFrequency(dampingCutoffFrequency);
     }
 
+    for (auto& fdn4reverb : m_FDN4Reverbs)
+    {
+        fdn4reverb.setDampingEnabled(dampingEnabled);
+        fdn4reverb.setDampingCutOffFrequency(dampingCutoffFrequency);
+    }
+
     
 
     
@@ -344,10 +363,24 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
             // channelData[sample] = (m_dampingFilters[channel].processSample(channelData[sample]));
             // channelData[sample] += (m_combFilters[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] += (m_reverbs[channel].processSample(channelData[sample])) * reverbVolume;
-            channelData[sample] += (m_fdn4s[channel].processSample(channelData[sample])) * reverbVolume;
+            // channelData[sample] += (m_fdn4s[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] += (m_intDelays[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] += (m_intCombFilters[channel].processSample(channelData[sample])) * reverbVolume;
             // channelData[sample] += (m_JCReverbs[channel].processSample(channelData[sample])) * reverbVolume;
+            // channelData[sample] += (m_FDN4Reverbs[channel].processSample(channelData[sample])) * reverbVolume;
+            float wet = 0.0f;
+
+            if (reverbType == ReverbType::Schroeder)
+                wet = (m_reverbs[channel].processSample(channelData[sample]));
+
+            else if (reverbType == ReverbType::JCRev)
+                wet = (m_JCReverbs[channel].processSample(channelData[sample]));
+
+            else if (reverbType == ReverbType::FDN4)
+                wet = (m_FDN4Reverbs[channel].processSample(channelData[sample]));
+
+            channelData[sample] += wet * reverbVolume;
+
 
         }
     }

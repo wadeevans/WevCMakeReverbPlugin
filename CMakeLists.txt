@@ -97,7 +97,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/IntegerAllPass.cpp
         src/IntegerAllPass.h
         src/JCReverb.cpp
-        src/JCReverb.h)
+        src/JCReverb.h
+        src/FDN4Reverb.cpp
+        src/FDN4Reverb.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE

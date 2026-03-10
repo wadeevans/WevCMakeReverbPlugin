@@ -30,6 +30,22 @@
 #include "IntegerDelay.h"
 #include "IntegerFBCF.h"
 #include "JCReverb.h"
+#include "FDN4Reverb.h"
+
+
+// Reverb Types
+enum class ReverbType
+{
+    Schroeder = 0,
+    JCRev = 1,
+    FDN4 = 2,
+    Count = 3
+};
+
+inline juce::StringArray getReverbTypeNames()
+{
+    return { "Schroeder", "JCRev", "FDN4" };
+}
 
 
 //==============================================================================
@@ -91,6 +107,7 @@ private:
     std::array<IntegerDelay, 2> m_intDelays;
     std::array<IntegerFBCF, 2> m_intCombFilters;
     std::array<JCReverb, 2> m_JCReverbs;
+    std::array<FDN4Reverb, 2> m_FDN4Reverbs;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WevCMakeReverbPluginAudioProcessor)
