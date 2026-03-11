@@ -99,7 +99,11 @@ target_compile_definitions(${PROJECT_NAME}
         src/JCReverb.cpp
         src/JCReverb.h
         src/FDN4Reverb.cpp
-        src/FDN4Reverb.h)
+        src/FDN4Reverb.h
+        src/Puckette4.cpp
+        src/Puckette4.h
+        src/Householder4.cpp
+        src/Householder4.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE
