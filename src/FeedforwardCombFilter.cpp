@@ -11,8 +11,8 @@ void FeedforwardCombFilter::prepare(double sampleRate, float maxDelayMs, float f
     m_delayLine.prepare(sampleRate, maxDelayMs, smoothingMs);
 
     // If delayMs not specified, use maxDelayMs
-    float actualDelay = (delayMs < 0.0f) ? maxDelayMs : delayMs;
-    m_delayLine.setDelay(actualDelay);
+    float actualDelayMs = (delayMs < 0.0f) ? maxDelayMs : delayMs;
+    m_delayLine.setDelayInMs(actualDelayMs);
 
     clear();
 }

@@ -12,18 +12,25 @@ FDN4::FDN4()
 
 void FDN4::prepare(double sampleRate)
 {
-    float smoothingMs = 50.0f * 0.05f;
+    float maxDelayInMs = 100.0f;
+    float smoothingMs = maxDelayInMs * 0.05f;
+    
 
     for (auto& delayLine : m_delayLines)
     {
-        delayLine.prepare(sampleRate, 50.0f, smoothingMs);
+        delayLine.prepare(sampleRate, maxDelayInMs, smoothingMs);
 
     }
 
-    m_delayLines[0].setDelay(37.0f);
-    m_delayLines[1].setDelay(41.0f);
-    m_delayLines[2].setDelay(43.0f);
-    m_delayLines[3].setDelay(47.0f);
+    /*m_delayLines[0].setDelayInMs(37.0f);
+    m_delayLines[1].setDelayInMs(41.0f);
+    m_delayLines[2].setDelayInMs(43.0f);
+    m_delayLines[3].setDelayInMs(47.0f);*/
+
+    m_delayLines[0].setDelayInSamples(1571.0f);
+    m_delayLines[1].setDelayInSamples(2053.0f);
+    m_delayLines[2].setDelayInSamples(2719.0f);
+    m_delayLines[3].setDelayInSamples(3463.0f);
 
     for (auto& dampingFilter : m_dampingFilters)
     {
@@ -91,9 +98,15 @@ void FDN4::clear()
     }
 }
 
-void FDN4::setDelayTimes(const std::array<float, 4>& delayTimes)
+void FDN4::setDelayTimesInMs(const std::array<float, 4>& delayTimesInMs)
 {
     for (int i = 0; i < 4; i++)
-        m_delayLines[i].setDelay(delayTimes[i]);
+        m_delayLines[i].setDelayInMs(delayTimesInMs[i]);
 
+}
+
+void FDN4::setDelayTimesInSamples(const std::array<float, 4>& delayTimesInSamples)
+{
+    for (int i = 0; i < 4; i++)
+        m_delayLines[i].setDelayInSamples(delayTimesInSamples[i]);
 }

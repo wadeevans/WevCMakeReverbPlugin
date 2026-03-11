@@ -17,7 +17,7 @@ void FractionalDelay::prepare(double sampleRate, float maxDelayInMs, float smoot
 
 }
 
-void FractionalDelay::setDelay(float delayInMs)
+void FractionalDelay::setDelayInMs(float delayInMs)
 {
     float delayInSamples = (delayInMs / 1000.0f) * m_sampleRate;
     
@@ -27,6 +27,15 @@ void FractionalDelay::setDelay(float delayInMs)
 
     m_delayTimeSmoother.setTargetValue(delayInSamples);
     
+}
+
+void FractionalDelay::setDelayInSamples(float delayInSamples)
+{
+    // Ensure delay doesn't exceed buffer size
+    if (delayInSamples > m_bufferSize)
+        delayInSamples = m_bufferSize;
+
+    m_delayTimeSmoother.setTargetValue(delayInSamples);
 }
 
 void FractionalDelay::setSmoothingTime(float timeMs)

@@ -7,7 +7,7 @@ void FixedAllPass::prepare(double sampleRate, float delayMs, float feedbackGain)
 {
     m_feedbackGain = feedbackGain;
     m_delayLine.prepare(sampleRate, delayMs, 0.0f);
-    m_delayLine.setDelay(delayMs);
+    m_delayLine.setDelayInMs(delayMs);
 }
 
 float FixedAllPass::processSample(float input)

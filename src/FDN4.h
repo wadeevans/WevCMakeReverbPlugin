@@ -16,10 +16,11 @@ public:
     void prepare(double sampleRate);
     float processSample(float input);
     void setDampingEnabled(bool dampingEnabled) { m_dampingEnabled = dampingEnabled; }
-    void setDampingCutOffFrequency(float frequencyHz);  // { m_dampingFilter.setCutoffFrequency(frequencyHz); }
+    void setDampingCutOffFrequency(float frequencyHz);  
     void clear();
 
-    void setDelayTimes(const std::array<float, 4>& delayTimes);
+    void setDelayTimesInMs(const std::array<float, 4>& delayTimesInMs);
+    void setDelayTimesInSamples(const std::array<float, 4>& delayTimesInSamples);
 
 private:
 
@@ -29,7 +30,7 @@ private:
 
     std::array<FractionalDelay, 4> m_delayLines;
     std::array<OnePoleFilter, 4> m_dampingFilters;
-    std::array<float, 4> m_delayOutputs;
+    std::array<float, 4> m_delayOutputs{ 0.0f, 0.0f, 0.0f, 0.0f };
 
     std::unique_ptr<MixingMatrix4> m_mixingMatrix;
 

@@ -10,7 +10,7 @@ public:
 
     void prepare(double sampleRate, float maxDelayMs, float feedforwardGain = 0.5f, float delayMs = -1.0f);
     void setFeedforwardGain(float feedforwardGain) { m_feedforwardGain = feedforwardGain; }
-    void setDelayTime(float delayMs) { m_delayLine.setDelay(delayMs); }
+    void setDelayTime(float delayMs) { m_delayLine.setDelayInMs(delayMs); }
     float processSample(float input);
     void clear();
 

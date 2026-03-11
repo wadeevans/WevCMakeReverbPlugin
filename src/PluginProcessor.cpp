@@ -281,7 +281,7 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
     auto delayTime = apvts.getRawParameterValue("delayTime")->load();
 
     for (auto& delay : m_delays)
-        delay.setDelay(delayTime);
+        delay.setDelayInMs(delayTime);
 
     auto reverbVolume = apvts.getRawParameterValue("reverbVolume")->load();
 
