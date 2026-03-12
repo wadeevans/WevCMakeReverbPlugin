@@ -12,8 +12,6 @@
 
 // new CMake method of pulling in JUCE files
 
-
-
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_audio_devices/juce_audio_devices.h>
 #include <juce_gui_basics/juce_gui_basics.h>
@@ -31,27 +29,26 @@
 #include "IntegerFBCF.h"
 #include "JCReverb.h"
 #include "FDN4Reverb.h"
-
+#include "Reverb.h"
 
 // Reverb Types
-enum class ReverbType
-{
-    Schroeder = 0,
-    JCRev = 1,
-    FDN4 = 2,
-    Count = 3
-};
+// enum class ReverbType
+// {
+//     Schroeder = 0,
+//     JCRev = 1,
+//     FDN4 = 2,
+//     Count = 3
+// };
 
-inline juce::StringArray getReverbTypeNames()
-{
-    return { "Schroeder", "JCRev", "FDN4" };
-}
-
+// inline juce::StringArray getReverbTypeNames()
+// {
+//     return { "Schroeder", "JCRev", "FDN4" };
+// }
 
 //==============================================================================
 /**
-*/
-class WevCMakeReverbPluginAudioProcessor  : public juce::AudioProcessor
+ */
+class WevCMakeReverbPluginAudioProcessor : public juce::AudioProcessor
 {
 public:
     //==============================================================================
@@ -59,17 +56,17 @@ public:
     ~WevCMakeReverbPluginAudioProcessor() override;
 
     //==============================================================================
-    void prepareToPlay (double sampleRate, int samplesPerBlock) override;
+    void prepareToPlay(double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
-   #ifndef JucePlugin_PreferredChannelConfigurations
-    bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
-   #endif
+#ifndef JucePlugin_PreferredChannelConfigurations
+    bool isBusesLayoutSupported(const BusesLayout &layouts) const override;
+#endif
 
-    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+    void processBlock(juce::AudioBuffer<float> &, juce::MidiBuffer &) override;
 
     //==============================================================================
-    juce::AudioProcessorEditor* createEditor() override;
+    juce::AudioProcessorEditor *createEditor() override;
     bool hasEditor() const override;
 
     //==============================================================================
@@ -83,17 +80,16 @@ public:
     //==============================================================================
     int getNumPrograms() override;
     int getCurrentProgram() override;
-    void setCurrentProgram (int index) override;
-    const juce::String getProgramName (int index) override;
-    void changeProgramName (int index, const juce::String& newName) override;
+    void setCurrentProgram(int index) override;
+    const juce::String getProgramName(int index) override;
+    void changeProgramName(int index, const juce::String &newName) override;
 
     //==============================================================================
-    void getStateInformation (juce::MemoryBlock& destData) override;
-    void setStateInformation (const void* data, int sizeInBytes) override;
+    void getStateInformation(juce::MemoryBlock &destData) override;
+    void setStateInformation(const void *data, int sizeInBytes) override;
 
 private:
-
-    juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
+    juce::AudioProcessorValueTreeState apvts{*this, nullptr, "Parameters", createParameterLayout()};
 
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
@@ -110,5 +106,5 @@ private:
     std::array<FDN4Reverb, 2> m_FDN4Reverbs;
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WevCMakeReverbPluginAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WevCMakeReverbPluginAudioProcessor)
 };

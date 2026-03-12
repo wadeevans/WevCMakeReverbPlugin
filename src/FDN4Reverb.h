@@ -19,6 +19,8 @@ public:
     // void setPreDelayEnabled(bool preDelayEnabled);
     void clear();
 
+    void setMatrixType(MatrixType4 matrixType) { m_fdn4.setMatrixType(matrixType); };
+
 private:
     FDN4 m_fdn4;
 

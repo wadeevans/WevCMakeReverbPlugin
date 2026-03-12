@@ -12,14 +12,14 @@
 //==============================================================================
 WevCMakeReverbPluginAudioProcessor::WevCMakeReverbPluginAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                     #endif
-                       )
+    : AudioProcessor(BusesProperties()
+#if !JucePlugin_IsMidiEffect
+#if !JucePlugin_IsSynth
+                         .withInput("Input", juce::AudioChannelSet::stereo(), true)
+#endif
+                         .withOutput("Output", juce::AudioChannelSet::stereo(), true)
+#endif
+      )
 #endif
 {
 }
@@ -30,74 +30,85 @@ WevCMakeReverbPluginAudioProcessor::~WevCMakeReverbPluginAudioProcessor()
 
 juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioProcessor::createParameterLayout()
 {
+    /*auto reverbNames = getReverbTypeNames();
+    juce::StringArray reverbJuceNames{reverbNames.data(), (int)reverbNames.size()};
+
+    auto matrixNames = getMatrixType4Names();
+    juce::StringArray matrixJuceNames{matrixNames.data(), (int)matrixNames.size()};*/
+
+    auto reverbNames = getReverbTypeNames();
+    juce::StringArray reverbJuceNames;
+    for (const auto& name : reverbNames)
+        reverbJuceNames.add(name);
+
+    auto matrixNames = getMatrixType4Names();
+    juce::StringArray matrixJuceNames;
+    for (const auto& name : matrixNames)
+        matrixJuceNames.add(name);
+
     return {
         std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID("delayTime", 1),
             "Delay Time",
             juce::NormalisableRange(0.0f, 500.0f, 0.1f),
-            100.0f
-        ),
+            100.0f),
         std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID("reverbVolume", 1),
             "Reverb Volume",
             juce::NormalisableRange(0.0f, 1.0f, 0.01f),
-            0.5f
-        ),
+            0.5f),
         std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID("allpassDelayTime", 1),
             "AllPass Delay Time",
             juce::NormalisableRange(0.0f, 100.0f, 0.1f),
-            20.0f
-        ),
+            20.0f),
         std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID("allpassFeedbackGain", 1),
             "AllPass Feedback Gain",
             juce::NormalisableRange(0.0f, 0.99f, 0.01f),
-            0.7f
-        ),
+            0.7f),
         std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID("cutoffFrequency", 1),
             "Cutoff Frequency",
             juce::NormalisableRange(200.0f, 20000.0f, 1.0f, 0.3f),
-            5000.0f
-        ),
+            5000.0f),
         std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID("combDelayTime", 1),
             "Comb Delay Time",
             juce::NormalisableRange(1.0f, 100.0f, 0.1f),
-            20.0f
-        ),
+            20.0f),
         std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID("combFeedbackGain", 1),
             "Comb Feedback",
-            juce::NormalisableRange(0.0f, 0.95f, 0.01f),  // Cap at 0.95 for safety!
-            0.7f
-        ),
+            juce::NormalisableRange(0.0f, 0.95f, 0.01f), // Cap at 0.95 for safety!
+            0.7f),
         // Add damping bypass button
         std::make_unique<juce::AudioParameterBool>(
-            juce::ParameterID{"damping", 1},  // ID
-            "Damping",                        // Name shown in DAW
-            false
-        ),
+            juce::ParameterID{"damping", 1}, // ID
+            "Damping",                       // Name shown in DAW
+            false),
         std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID("dampingCutoffFrequency", 1),
             "Damping Cutoff Frequency",
             juce::NormalisableRange(500.0f, 20000.0f, 1.0f, 0.3f),
-            10000.0f
-        ),
+            10000.0f),
         std::make_unique<juce::AudioParameterBool>(
-            juce::ParameterID{"predelaytap", 1},  // ID
-            "Pre Delay Tap",                        // Name shown in DAW
-            false
-        ),
+            juce::ParameterID{"predelaytap", 1}, // ID
+            "Pre Delay Tap",                     // Name shown in DAW
+            false),
         std::make_unique<juce::AudioParameterChoice>(
             juce::ParameterID{"reverbType", 1},
             "Reverb Type",
-            getReverbTypeNames(),
-            0  // default index
-        ),
-        
-    
+            reverbJuceNames,
+            0 // Schroeder default index
+            ),
+        std::make_unique<juce::AudioParameterChoice>(
+            juce::ParameterID{"matrixType", 1},
+            "Matrix Type",
+            matrixJuceNames,
+            0 // Hadamard4 default index
+            ),
+
     };
 }
 
@@ -109,29 +120,29 @@ const juce::String WevCMakeReverbPluginAudioProcessor::getName() const
 
 bool WevCMakeReverbPluginAudioProcessor::acceptsMidi() const
 {
-   #if JucePlugin_WantsMidiInput
+#if JucePlugin_WantsMidiInput
     return true;
-   #else
+#else
     return false;
-   #endif
+#endif
 }
 
 bool WevCMakeReverbPluginAudioProcessor::producesMidi() const
 {
-   #if JucePlugin_ProducesMidiOutput
+#if JucePlugin_ProducesMidiOutput
     return true;
-   #else
+#else
     return false;
-   #endif
+#endif
 }
 
 bool WevCMakeReverbPluginAudioProcessor::isMidiEffect() const
 {
-   #if JucePlugin_IsMidiEffect
+#if JucePlugin_IsMidiEffect
     return true;
-   #else
+#else
     return false;
-   #endif
+#endif
 }
 
 double WevCMakeReverbPluginAudioProcessor::getTailLengthSeconds() const
@@ -141,8 +152,8 @@ double WevCMakeReverbPluginAudioProcessor::getTailLengthSeconds() const
 
 int WevCMakeReverbPluginAudioProcessor::getNumPrograms()
 {
-    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
-                // so this should be at least 1, even if you're not really implementing programs.
+    return 1; // NB: some hosts don't cope very well if you tell them there are 0 programs,
+              // so this should be at least 1, even if you're not really implementing programs.
 }
 
 int WevCMakeReverbPluginAudioProcessor::getCurrentProgram()
@@ -150,78 +161,75 @@ int WevCMakeReverbPluginAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void WevCMakeReverbPluginAudioProcessor::setCurrentProgram (int index)
+void WevCMakeReverbPluginAudioProcessor::setCurrentProgram(int index)
 {
 }
 
-const juce::String WevCMakeReverbPluginAudioProcessor::getProgramName (int index)
+const juce::String WevCMakeReverbPluginAudioProcessor::getProgramName(int index)
 {
     return {};
 }
 
-void WevCMakeReverbPluginAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void WevCMakeReverbPluginAudioProcessor::changeProgramName(int index, const juce::String &newName)
 {
 }
 
 //==============================================================================
-void WevCMakeReverbPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void WevCMakeReverbPluginAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-    for (auto& delay : m_delays)
+    for (auto &delay : m_delays)
     {
         delay.prepare(sampleRate, 500.0f, 50.0f);
         // delay.setDelay(100.0f);
     }
 
-    for (auto& allpass : m_allpass)
+    for (auto &allpass : m_allpass)
     {
         allpass.prepare(sampleRate, 100.0f, 0.7f);
     }
 
-    for (auto& dampingFilter : m_dampingFilters)
+    for (auto &dampingFilter : m_dampingFilters)
     {
         dampingFilter.prepare(sampleRate);
         dampingFilter.setCutoffFrequency(500.0);
     }
 
-    for (auto& combFilter : m_combFilters)
+    for (auto &combFilter : m_combFilters)
     {
         combFilter.prepare(sampleRate, 100.0f, 0.7f, 20.0f);
-
     }
 
-    for (auto& reverb : m_reverbs)
+    for (auto &reverb : m_reverbs)
     {
         reverb.prepare(sampleRate);
     }
 
-    for (auto& fdn4 : m_fdn4s)
+    for (auto &fdn4 : m_fdn4s)
     {
         fdn4.prepare(sampleRate);
     }
 
-    for (auto& intDelay : m_intDelays)
+    for (auto &intDelay : m_intDelays)
     {
         intDelay.prepare(8000);
     }
 
-    for (auto& intCombFilter : m_intCombFilters)
+    for (auto &intCombFilter : m_intCombFilters)
     {
         intCombFilter.prepare(sampleRate, 200, 0.8);
     }
 
-    for (auto& jcreverb : m_JCReverbs)
+    for (auto &jcreverb : m_JCReverbs)
     {
         jcreverb.prepare(sampleRate);
     }
 
-    for (auto& fdn4reverb : m_FDN4Reverbs)
+    for (auto &fdn4reverb : m_FDN4Reverbs)
     {
         fdn4reverb.prepare(sampleRate);
     }
-
-    
 }
 
 void WevCMakeReverbPluginAudioProcessor::releaseResources()
@@ -231,35 +239,34 @@ void WevCMakeReverbPluginAudioProcessor::releaseResources()
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool WevCMakeReverbPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool WevCMakeReverbPluginAudioProcessor::isBusesLayoutSupported(const BusesLayout &layouts) const
 {
-  #if JucePlugin_IsMidiEffect
-    juce::ignoreUnused (layouts);
+#if JucePlugin_IsMidiEffect
+    juce::ignoreUnused(layouts);
     return true;
-  #else
+#else
     // This is the place where you check if the layout is supported.
     // In this template code we only support mono or stereo.
     // Some plugin hosts, such as certain GarageBand versions, will only
     // load plugins that support stereo bus layouts.
-    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono() && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
     // This checks if the input layout matches the output layout
-   #if ! JucePlugin_IsSynth
+#if !JucePlugin_IsSynth
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
-   #endif
+#endif
 
     return true;
-  #endif
+#endif
 }
 #endif
 
-void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void WevCMakeReverbPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
+    auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
     // In case we have more outputs than inputs, this code clears any output
@@ -269,7 +276,7 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
     // when they first compile a plugin, but obviously you don't need to keep
     // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+        buffer.clear(i, 0, buffer.getNumSamples());
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
@@ -277,18 +284,18 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    
+
     auto delayTime = apvts.getRawParameterValue("delayTime")->load();
 
-    for (auto& delay : m_delays)
+    for (auto &delay : m_delays)
         delay.setDelayInMs(delayTime);
 
     auto reverbVolume = apvts.getRawParameterValue("reverbVolume")->load();
 
     auto allpassDelayTime = apvts.getRawParameterValue("allpassDelayTime")->load();
-    auto allpassFeedbackGain = apvts.getRawParameterValue("allpassFeedbackGain")->load(); 
+    auto allpassFeedbackGain = apvts.getRawParameterValue("allpassFeedbackGain")->load();
 
-    for (auto& allpass : m_allpass)
+    for (auto &allpass : m_allpass)
     {
         allpass.setDelayTime(allpassDelayTime);
         allpass.setFeedbackGain(allpassFeedbackGain);
@@ -296,13 +303,13 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
 
     auto cutoffFrequency = apvts.getRawParameterValue("cutoffFrequency")->load();
 
-    for (auto& dampingFilter : m_dampingFilters)
+    for (auto &dampingFilter : m_dampingFilters)
         dampingFilter.setCutoffFrequency(cutoffFrequency);
 
     auto combDelay = apvts.getRawParameterValue("combDelayTime")->load();
     auto combFeedbackGain = apvts.getRawParameterValue("combFeedbackGain")->load();
 
-    for (auto& combFilter : m_combFilters)
+    for (auto &combFilter : m_combFilters)
     {
         combFilter.setDelayTime(combDelay);
         combFilter.setFeedbackGain(combFeedbackGain);
@@ -312,48 +319,48 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
     auto dampingCutoffFrequency = apvts.getRawParameterValue("dampingCutoffFrequency")->load();
     bool preDelayEnabled = apvts.getRawParameterValue("predelaytap")->load() > 0.5f;
 
-    auto reverbType = static_cast<ReverbType>((int)apvts.getRawParameterValue("reverbType")->load());
+    /*auto reverbType = static_cast<ReverbType>((int)apvts.getRawParameterValue("reverbType")->load());*/
+    auto reverbType = static_cast<ReverbType>((int)std::round(apvts.getRawParameterValue("reverbType")->load()));
 
-    for (auto& reverb : m_reverbs)
+    for (auto &reverb : m_reverbs)
     {
         reverb.setDampingEnabled(dampingEnabled);
         reverb.setDampingCutOffFrequency(dampingCutoffFrequency);
         reverb.setPreDelayEnabled(preDelayEnabled);
     }
 
-    for (auto& intCombFilter : m_intCombFilters)
+    for (auto &intCombFilter : m_intCombFilters)
     {
         intCombFilter.setDampingEnabled(dampingEnabled);
         intCombFilter.setDampingCutOffFrequency(dampingCutoffFrequency);
     }
 
-    for (auto& jcreverb : m_JCReverbs)
+    for (auto &jcreverb : m_JCReverbs)
     {
         jcreverb.setDampingEnabled(dampingEnabled);
         jcreverb.setDampingCutOffFrequency(dampingCutoffFrequency);
         jcreverb.setPreDelayEnabled(preDelayEnabled);
     }
 
-    for (auto& fdn4 : m_fdn4s)
+    for (auto &fdn4 : m_fdn4s)
     {
         fdn4.setDampingEnabled(dampingEnabled);
         fdn4.setDampingCutOffFrequency(dampingCutoffFrequency);
     }
 
-    for (auto& fdn4reverb : m_FDN4Reverbs)
+    auto matrixType = static_cast<MatrixType4>(
+        (int)std::round(apvts.getRawParameterValue("matrixType")->load()));
+
+    for (auto &fdn4reverb : m_FDN4Reverbs)
     {
         fdn4reverb.setDampingEnabled(dampingEnabled);
         fdn4reverb.setDampingCutOffFrequency(dampingCutoffFrequency);
+        fdn4reverb.setMatrixType(matrixType);
     }
-
-    
-
-    
-
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
+        auto *channelData = buffer.getWritePointer(channel);
 
         // ..do something to the data...
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
@@ -380,8 +387,6 @@ void WevCMakeReverbPluginAudioProcessor::processBlock (juce::AudioBuffer<float>&
                 wet = (m_FDN4Reverbs[channel].processSample(channelData[sample]));
 
             channelData[sample] += wet * reverbVolume;
-
-
         }
     }
 }
@@ -392,20 +397,20 @@ bool WevCMakeReverbPluginAudioProcessor::hasEditor() const
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* WevCMakeReverbPluginAudioProcessor::createEditor()
+juce::AudioProcessorEditor *WevCMakeReverbPluginAudioProcessor::createEditor()
 {
-    return new WevCMakeReverbPluginAudioProcessorEditor (*this);
+    return new WevCMakeReverbPluginAudioProcessorEditor(*this);
 }
 
 //==============================================================================
-void WevCMakeReverbPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void WevCMakeReverbPluginAudioProcessor::getStateInformation(juce::MemoryBlock &destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
 }
 
-void WevCMakeReverbPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void WevCMakeReverbPluginAudioProcessor::setStateInformation(const void *data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -413,7 +418,7 @@ void WevCMakeReverbPluginAudioProcessor::setStateInformation (const void* data, 
 
 //==============================================================================
 // This creates new instances of the plugin..
-juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+juce::AudioProcessor *JUCE_CALLTYPE createPluginFilter()
 {
     return new WevCMakeReverbPluginAudioProcessor();
 }
