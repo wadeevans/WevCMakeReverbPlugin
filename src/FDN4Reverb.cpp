@@ -34,9 +34,12 @@ float FDN4Reverb::processSample(float input)
 
     float output = m_fdn4.processSample(diffused);
 
-    // output = m_outAllPasses[0].processSample(output);
+    if (m_outputAllPassesEnabled)
+    {
+        output = m_outAllPasses[0].processSample(output);
 
-    // output = m_outAllPasses[1].processSample(output);
+        output = m_outAllPasses[1].processSample(output);
+    }
 
     return output;
 }

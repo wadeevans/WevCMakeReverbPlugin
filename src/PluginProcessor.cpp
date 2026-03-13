@@ -108,6 +108,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioPro
             matrixJuceNames,
             0 // Hadamard4 default index
             ),
+        std::make_unique<juce::AudioParameterBool>(
+            juce::ParameterID{"outputAllPasses", 1}, // ID
+            "Output AllPasses",                       // Name shown in DAW
+            false),
 
     };
 }
@@ -322,6 +326,8 @@ void WevCMakeReverbPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &
     /*auto reverbType = static_cast<ReverbType>((int)apvts.getRawParameterValue("reverbType")->load());*/
     auto reverbType = static_cast<ReverbType>((int)std::round(apvts.getRawParameterValue("reverbType")->load()));
 
+    auto outputAllPassesEnabled = apvts.getRawParameterValue("outputAllPasses")->load() > 0.5f;
+
     for (auto &reverb : m_reverbs)
     {
         reverb.setDampingEnabled(dampingEnabled);
@@ -356,7 +362,12 @@ void WevCMakeReverbPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &
         fdn4reverb.setDampingEnabled(dampingEnabled);
         fdn4reverb.setDampingCutOffFrequency(dampingCutoffFrequency);
         fdn4reverb.setMatrixType(matrixType);
+        fdn4reverb.setOutputAllPassesEnabled(outputAllPassesEnabled);
     }
+
+   
+
+    // Process the Audio
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {

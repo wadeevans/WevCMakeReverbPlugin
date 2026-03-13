@@ -20,6 +20,7 @@ public:
     void clear();
 
     void setMatrixType(MatrixType4 matrixType) { m_fdn4.setMatrixType(matrixType); };
+    void setOutputAllPassesEnabled(bool outputAllPassesEnabled) { m_outputAllPassesEnabled = outputAllPassesEnabled; };
 
 private:
     FDN4 m_fdn4;
@@ -27,4 +28,6 @@ private:
     std::array<FixedAllPass, 3> m_inAllPasses;
     
     std::array<FixedAllPass, 2> m_outAllPasses;
+
+    bool m_outputAllPassesEnabled = false;
 };
