@@ -35,11 +35,20 @@ void JCReverb::prepare(double sampleRate)
 
 float JCReverb::processSample(float input)
 {
-    // Placeholder for reverb processing algorithm
+    
 
-    float diffused = m_inAllPasses[0].processSample(input);
+    /*float diffused = m_inAllPasses[0].processSample(input);
     diffused = m_inAllPasses[1].processSample(diffused);
-    diffused = m_inAllPasses[2].processSample(diffused);
+    diffused = m_inAllPasses[2].processSample(diffused);*/
+
+    float diffused = input;
+
+    if (m_inputAllPassesEnabled)
+    {
+        diffused = m_inAllPasses[0].processSample(input);
+        diffused = m_inAllPasses[1].processSample(diffused);
+        diffused = m_inAllPasses[2].processSample(diffused);
+    }
 
     // array would be useful here for loop with sum
     
@@ -51,15 +60,17 @@ float JCReverb::processSample(float input)
 
     output /= static_cast<float>(NUM_COMBS);
 
-    /*float fbcf0return = m_fbcfs[0].processSample(diffused);
-    float fbcf1return = m_fbcfs[1].processSample(diffused);
-    float fbcf2return = m_fbcfs[2].processSample(diffused);
-    float fbcf3return = m_fbcfs[3].processSample(diffused);
-
-    float output = (fbcf0return + fbcf1return + fbcf2return + fbcf3return) / static_cast<float>(NUM_COMBS);*/
+    
 
     // output = m_outAllPasses[0].processSample(output);
     // output = m_outAllPasses[1].processSample(output);
+
+    if (m_outputAllPassesEnabled)
+    {
+        output = m_outAllPasses[0].processSample(output);
+
+        output = m_outAllPasses[1].processSample(output);
+    }
 
     return output;
 }

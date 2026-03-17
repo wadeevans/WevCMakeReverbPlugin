@@ -28,9 +28,15 @@ void FDN4Reverb::prepare(double sampleRate)
 
 float FDN4Reverb::processSample(float input)
 {
-    float diffused = m_inAllPasses[0].processSample(input);
-    diffused = m_inAllPasses[1].processSample(diffused);
-    diffused = m_inAllPasses[2].processSample(diffused);
+    float diffused = input;
+
+    if (m_inputAllPassesEnabled)
+    {
+        diffused = m_inAllPasses[0].processSample(input);
+        diffused = m_inAllPasses[1].processSample(diffused);
+        diffused = m_inAllPasses[2].processSample(diffused);
+    }
+    
 
     float output = m_fdn4.processSample(diffused);
 

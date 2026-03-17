@@ -35,9 +35,18 @@ void SchroederReverb::prepare(double sampleRate)
 
 float SchroederReverb::processSample(float input)
 {
-    float diffused = m_inAllPasses[0].processSample(input);
+    /*float diffused = m_inAllPasses[0].processSample(input);
     diffused = m_inAllPasses[1].processSample(diffused);
-    diffused = m_inAllPasses[2].processSample(diffused);
+    diffused = m_inAllPasses[2].processSample(diffused);*/
+
+    float diffused = input;
+
+    if (m_inputAllPassesEnabled)
+    {
+        diffused = m_inAllPasses[0].processSample(input);
+        diffused = m_inAllPasses[1].processSample(diffused);
+        diffused = m_inAllPasses[2].processSample(diffused);
+    }
 
     // array would be useful here for loop with sum
     float output = 0.0f;
@@ -51,6 +60,13 @@ float SchroederReverb::processSample(float input)
     // output = m_outAllPasses[0].processSample(output);
 
     // output = m_outAllPasses[1].processSample(output);
+
+    if (m_outputAllPassesEnabled)
+    {
+        output = m_outAllPasses[0].processSample(output);
+
+        output = m_outAllPasses[1].processSample(output);
+    }
 
     return output;
 }

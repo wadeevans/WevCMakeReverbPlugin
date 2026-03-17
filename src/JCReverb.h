@@ -18,10 +18,16 @@ public:
     void setPreDelayEnabled(bool preDelayEnabled);
     void clear();
 
+    void setInputAllPassesEnabled(bool inputAllPassesEnabled) { m_inputAllPassesEnabled = inputAllPassesEnabled; }
+    void setOutputAllPassesEnabled(bool outputAllPassesEnabled) { m_outputAllPassesEnabled = outputAllPassesEnabled; }
+
 private:
     static constexpr int NUM_COMBS = 4;
 
     std::array<IntegerAllPass, 3> m_inAllPasses;
     std::array<IntegerFBCF, 4> m_fbcfs;
     std::array<IntegerAllPass, 2> m_outAllPasses;
+
+    bool m_inputAllPassesEnabled = true;
+    bool m_outputAllPassesEnabled = false;
 };

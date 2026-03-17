@@ -112,6 +112,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout WevCMakeReverbPluginAudioPro
             juce::ParameterID{"outputAllPasses", 1}, // ID
             "Output AllPasses",                       // Name shown in DAW
             false),
+        std::make_unique<juce::AudioParameterBool>(
+            juce::ParameterID{"inputAllPasses", 1}, // ID
+            "Input AllPasses",                       // Name shown in DAW
+            true),
 
     };
 }
@@ -326,6 +330,8 @@ void WevCMakeReverbPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &
     /*auto reverbType = static_cast<ReverbType>((int)apvts.getRawParameterValue("reverbType")->load());*/
     auto reverbType = static_cast<ReverbType>((int)std::round(apvts.getRawParameterValue("reverbType")->load()));
 
+    auto inputAllPassesEnabled = apvts.getRawParameterValue("inputAllPasses")->load() > 0.5f;
+
     auto outputAllPassesEnabled = apvts.getRawParameterValue("outputAllPasses")->load() > 0.5f;
 
     for (auto &reverb : m_reverbs)
@@ -333,6 +339,8 @@ void WevCMakeReverbPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &
         reverb.setDampingEnabled(dampingEnabled);
         reverb.setDampingCutOffFrequency(dampingCutoffFrequency);
         reverb.setPreDelayEnabled(preDelayEnabled);
+        reverb.setInputAllPassesEnabled(inputAllPassesEnabled);
+        reverb.setOutputAllPassesEnabled(outputAllPassesEnabled);
     }
 
     for (auto &intCombFilter : m_intCombFilters)
@@ -346,6 +354,8 @@ void WevCMakeReverbPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &
         jcreverb.setDampingEnabled(dampingEnabled);
         jcreverb.setDampingCutOffFrequency(dampingCutoffFrequency);
         jcreverb.setPreDelayEnabled(preDelayEnabled);
+        jcreverb.setInputAllPassesEnabled(inputAllPassesEnabled);
+        jcreverb.setOutputAllPassesEnabled(outputAllPassesEnabled);
     }
 
     for (auto &fdn4 : m_fdn4s)
@@ -362,6 +372,7 @@ void WevCMakeReverbPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &
         fdn4reverb.setDampingEnabled(dampingEnabled);
         fdn4reverb.setDampingCutOffFrequency(dampingCutoffFrequency);
         fdn4reverb.setMatrixType(matrixType);
+        fdn4reverb.setInputAllPassesEnabled(inputAllPassesEnabled);
         fdn4reverb.setOutputAllPassesEnabled(outputAllPassesEnabled);
     }
 

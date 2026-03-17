@@ -19,8 +19,9 @@ public:
     // void setPreDelayEnabled(bool preDelayEnabled);
     void clear();
 
-    void setMatrixType(MatrixType4 matrixType) { m_fdn4.setMatrixType(matrixType); };
-    void setOutputAllPassesEnabled(bool outputAllPassesEnabled) { m_outputAllPassesEnabled = outputAllPassesEnabled; };
+    void setMatrixType(MatrixType4 matrixType) { m_fdn4.setMatrixType(matrixType); }
+    void setInputAllPassesEnabled(bool inputAllPassesEnabled) { m_inputAllPassesEnabled = inputAllPassesEnabled; }
+    void setOutputAllPassesEnabled(bool outputAllPassesEnabled) { m_outputAllPassesEnabled = outputAllPassesEnabled; }
 
 private:
     FDN4 m_fdn4;
@@ -29,5 +30,6 @@ private:
     
     std::array<FixedAllPass, 2> m_outAllPasses;
 
+    bool m_inputAllPassesEnabled = true;
     bool m_outputAllPassesEnabled = false;
 };
