@@ -1,12 +1,12 @@
 #include "FractionalDelay.h"
 
-
 void FractionalDelay::prepare(double sampleRate, float maxDelayInMs, float smoothingMs)
 {
     m_sampleRate = static_cast<float>(sampleRate);
     // Convert max delay from milliseconds to samples
     m_bufferSize = (maxDelayInMs / 1000.0f) * m_sampleRate;
-    m_buffer.resize(static_cast<int>(m_bufferSize));
+    m_bufferSizeInt = static_cast<int>(m_bufferSize);
+    m_buffer.resize(m_bufferSizeInt);
     m_writeIndex = 0;
 
     // initialise smoothing parameter
@@ -14,19 +14,17 @@ void FractionalDelay::prepare(double sampleRate, float maxDelayInMs, float smoot
     m_delayTimeSmoother.setSmoothingTime(smoothingMs, m_sampleRate);
 
     clear();
-
 }
 
 void FractionalDelay::setDelayInMs(float delayInMs)
 {
     float delayInSamples = (delayInMs / 1000.0f) * m_sampleRate;
-    
+
     // Ensure delay doesn't exceed buffer size
-    if (delayInSamples > m_bufferSize) 
+    if (delayInSamples > m_bufferSize)
         delayInSamples = m_bufferSize;
 
     m_delayTimeSmoother.setTargetValue(delayInSamples);
-    
 }
 
 void FractionalDelay::setDelayInSamples(float delayInSamples)
@@ -51,10 +49,10 @@ float FractionalDelay::processSample(float input)
     {
         // Still write to buffer to maintain state
         m_buffer[m_writeIndex] = input;
-        m_writeIndex = (m_writeIndex + 1) % static_cast<int>(m_bufferSize);
+        // m_writeIndex = (m_writeIndex + 1) % static_cast<int>(m_bufferSize);
+        m_writeIndex = (m_writeIndex + 1) % m_bufferSizeInt;
         return input;
     }
-
 
     // create readPos as float ready for interpolation
     float readPos = m_writeIndex - currentDelay;
@@ -62,24 +60,33 @@ float FractionalDelay::processSample(float input)
     if (readPos < 0.0f)
         readPos += m_bufferSize;
 
-
     // create previousReadIndex and nextReadIndex for interpolation
     // int previousReadIndex = static_cast<int>(readPos); // possibility of getting an index of <int>(m_bufferSize) causing vector error??
-    int previousReadIndex = static_cast<int>(readPos) % static_cast<int>(m_bufferSize);
-    float fractionalPart = readPos - previousReadIndex;
-    int nextReadIndex = (previousReadIndex + 1) % static_cast<int>(m_bufferSize);
+    // int bufferSize = static_cast<int>(m_bufferSize);
 
-    float output = linearInterpolate(m_buffer[previousReadIndex], m_buffer[nextReadIndex], fractionalPart);
+    int previousReadIndex = static_cast<int>(readPos) % m_bufferSizeInt;
+    float fractionalPart = readPos - previousReadIndex;
+    // int nextReadIndex = (previousReadIndex + 1) % static_cast<int>(m_bufferSize);
+
+    float xminus1 = m_buffer[(previousReadIndex - 1 + m_bufferSizeInt) % m_bufferSizeInt];
+    float x0 = m_buffer[previousReadIndex];
+    float x1 = m_buffer[(previousReadIndex + 1) % m_bufferSizeInt];
+    float x2 = m_buffer[(previousReadIndex + 2) % m_bufferSizeInt];
+
+    // float output = linearInterpolate(x0, x1, fractionalPart);
+    float output = lagrange3interpolate(xminus1, x0, x1, x2, fractionalPart);
 
     // write input into buffer and advance m_writeIndex
     m_buffer[m_writeIndex] = input;
-    m_writeIndex = (m_writeIndex + 1) % static_cast<int>(m_bufferSize);
+    // m_writeIndex = (m_writeIndex + 1) % static_cast<int>(m_bufferSize);
+    m_writeIndex = (m_writeIndex + 1) % m_bufferSizeInt;
 
-    return output;  
+    return output;
 }
 
 void FractionalDelay::clear()
 {
-    for (auto& sample : m_buffer) sample = 0.0f;
+    for (auto &sample : m_buffer)
+        sample = 0.0f;
     m_writeIndex = 0;
 }

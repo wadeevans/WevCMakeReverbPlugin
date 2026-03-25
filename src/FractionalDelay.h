@@ -23,9 +23,9 @@ public:
     void clear();
 
 private:
-
     std::vector<float> m_buffer;
     float m_bufferSize = 0.0f;
+    int m_bufferSizeInt = 0;
     int m_writeIndex = 0;
     float m_delayInSamples = 0.0f;
     float m_sampleRate = 44100.0f;
@@ -37,4 +37,14 @@ private:
         return previousSample * (1.0f - fraction) + nextSample * fraction;
     }
 
+    float lagrange3interpolate(float xminus1, float x0, float x1, float x2, float fraction)
+    {
+        // Lagrange interpolation formula for 4 points
+        float cminus1 = (fraction - 0.0f) * (fraction - 1.0f) * (fraction - 2.0f) / -6.0f;
+        float c0 = (fraction + 1.0f) * (fraction - 1.0f) * (fraction - 2.0f) / 2.0f;
+        float c1 = (fraction + 1.0f) * (fraction - 0.0f) * (fraction - 2.0f) / -2.0f;
+        float c2 = (fraction + 1.0f) * (fraction - 0.0f) * (fraction - 1.0f) / 6.0f;
+
+        return (cminus1 * xminus1) + (c0 * x0) + (c1 * x1) + (c2 * x2);
+    }
 };
