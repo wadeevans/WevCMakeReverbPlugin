@@ -13,6 +13,8 @@ void FractionalDelay::prepare(double sampleRate, float maxDelayInMs, float smoot
     m_delayTimeSmoother.reset(0.0f);
     m_delayTimeSmoother.setSmoothingTime(smoothingMs, m_sampleRate);
 
+    m_lfo.prepare(sampleRate);
+
     clear();
 }
 
@@ -44,18 +46,25 @@ void FractionalDelay::setSmoothingTime(float timeMs)
 float FractionalDelay::processSample(float input)
 {
     float currentDelay = m_delayTimeSmoother.getNextValue();
+    float lfoValue = m_lfo.processSample(); // always tick
     // Special case: zero or near-zero delay
     if (currentDelay < 0.5f)
     {
         // Still write to buffer to maintain state
         m_buffer[m_writeIndex] = input;
-        // m_writeIndex = (m_writeIndex + 1) % static_cast<int>(m_bufferSize);
         m_writeIndex = (m_writeIndex + 1) % m_bufferSizeInt;
         return input;
     }
 
+    float lfoOffset = lfoValue * (m_lfoDepth / 100.0f) * currentDelay;
+    float modulatedDelay = currentDelay + lfoOffset;
+
+    // clamp modulated delay to safe range
+    if (modulatedDelay < 0.5f) modulatedDelay = 0.5f;
+    if (modulatedDelay > m_bufferSize) modulatedDelay = m_bufferSize;
+
     // create readPos as float ready for interpolation
-    float readPos = m_writeIndex - currentDelay;
+    float readPos = m_writeIndex - modulatedDelay;
 
     if (readPos < 0.0f)
         readPos += m_bufferSize;

@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "SmoothedParameter.h"
+#include "LFO.h"
 
 /**
  * A fractional delay line with linear interpolation.
@@ -19,6 +20,8 @@ public:
     void setDelayInMs(float delayInMs);
     void setDelayInSamples(float delayInSamples);
     void setSmoothingTime(float timeMs);
+    void setLFOFrequency(float frequency) { m_lfo.setFrequency(frequency); }
+    void setLFODepth(float depth) { m_lfoDepth = depth; }
     float processSample(float input);
     void clear();
 
@@ -31,6 +34,11 @@ private:
     float m_sampleRate = 44100.0f;
 
     SmoothedParameter m_delayTimeSmoother;
+
+    LFO m_lfo;
+
+    
+    float m_lfoDepth = 0.0f;
 
     float linearInterpolate(float previousSample, float nextSample, float fraction)
     {

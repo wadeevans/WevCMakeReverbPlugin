@@ -104,7 +104,9 @@ target_compile_definitions(${PROJECT_NAME}
         src/Puckette4.h
         src/Householder4.cpp
         src/Householder4.h
-        src/Reverb.h)
+        src/Reverb.h
+        src/LFO.cpp
+        src/LFO.h)
 
     target_link_libraries(${PROJECT_NAME}
     PRIVATE
