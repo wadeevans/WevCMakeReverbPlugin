@@ -15,6 +15,8 @@ void FDN4Reverb::prepare(double sampleRate)
     }
 
     m_fdn4.prepare(sampleRate);
+    m_fdn4.setLFOFrequencies({ 0.7f, 0.9f, 1.1f, 1.3f });
+    m_fdn4.setLFODepths({ 0.5f, 0.5f, 0.5f, 0.5f });
 
     float outAllPassLengths[2] = { 5.0f, 1.70f };
     float outAllPassGains[2] = { 0.7f, 0.7f };
@@ -23,6 +25,8 @@ void FDN4Reverb::prepare(double sampleRate)
     {
         m_outAllPasses[i].prepare(sampleRate, outAllPassLengths[i], outAllPassGains[i]);
     }
+
+
 
 }
 

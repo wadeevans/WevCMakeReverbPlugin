@@ -374,9 +374,16 @@ void WevCMakeReverbPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &
     {
         fdn4reverb.setDampingEnabled(dampingEnabled);
         fdn4reverb.setDampingCutOffFrequency(dampingCutoffFrequency);
-        fdn4reverb.setMatrixType(matrixType);
+        // fdn4reverb.setMatrixType(matrixType);
         fdn4reverb.setInputAllPassesEnabled(inputAllPassesEnabled);
         fdn4reverb.setOutputAllPassesEnabled(outputAllPassesEnabled);
+    }
+
+    if (matrixType != m_currentMatrixType)
+    {
+        m_currentMatrixType = matrixType;
+        for (auto& fdn4reverb : m_FDN4Reverbs)
+            fdn4reverb.setMatrixType(matrixType);
     }
 
    

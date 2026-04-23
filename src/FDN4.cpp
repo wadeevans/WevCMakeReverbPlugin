@@ -113,14 +113,19 @@ void FDN4::setMatrixType(MatrixType4 matrixType)
     {
     case MatrixType4::Hadamard4:
         m_mixingMatrix = std::make_unique<Hadamard4>();
+        clear();
         break;
     case MatrixType4::Puckette4:
         m_mixingMatrix = std::make_unique<Puckette4>();
+        clear();
         break;
     case MatrixType4::Householder4:
         m_mixingMatrix = std::make_unique<Householder4>();
+        clear();
         break;
     default:
         break;
     }
+
+    
 }

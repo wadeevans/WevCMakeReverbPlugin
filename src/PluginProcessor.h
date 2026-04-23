@@ -105,6 +105,8 @@ private:
     std::array<JCReverb, 2> m_JCReverbs;
     std::array<FDN4Reverb, 2> m_FDN4Reverbs;
 
+    MatrixType4 m_currentMatrixType = MatrixType4::Hadamard4;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WevCMakeReverbPluginAudioProcessor)
 };

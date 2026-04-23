@@ -22,6 +22,9 @@ public:
     void setDelayTimesInMs(const std::array<float, 4> &delayTimesInMs);
     void setDelayTimesInSamples(const std::array<float, 4> &delayTimesInSamples);
 
+    void setLFOFrequencies(const std::array<float, 4> &frequencies) { for (int i = 0; i < 4; ++i) m_delayLines[i].setLFOFrequency(frequencies[i]); }
+    void setLFODepths(const std::array<float, 4> &depths) { for (int i = 0; i < 4; ++i) m_delayLines[i].setLFODepth(depths[i]); }
+
     void setMatrixType(MatrixType4 matrixType);
 
 private:
