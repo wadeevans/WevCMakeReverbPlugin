@@ -73,8 +73,13 @@ float FractionalDelay::processSample(float input)
     // int previousReadIndex = static_cast<int>(readPos); // possibility of getting an index of <int>(m_bufferSize) causing vector error??
     // int bufferSize = static_cast<int>(m_bufferSize);
 
-    int previousReadIndex = static_cast<int>(readPos) % m_bufferSizeInt;
-    float fractionalPart = readPos - previousReadIndex;
+    /*int previousReadIndex = static_cast<int>(readPos) % m_bufferSizeInt;
+    float fractionalPart = readPos - previousReadIndex;*/ // This causes inastability
+
+    int previousReadIndex = static_cast<int>(readPos);
+    float fractionalPart = readPos - static_cast<float>(previousReadIndex); // take the fraction before wrapping
+    previousReadIndex %= m_bufferSizeInt;
+
     // int nextReadIndex = (previousReadIndex + 1) % static_cast<int>(m_bufferSize);
 
     float xminus1 = m_buffer[(previousReadIndex - 1 + m_bufferSizeInt) % m_bufferSizeInt];
